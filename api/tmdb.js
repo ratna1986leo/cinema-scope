@@ -20,10 +20,53 @@ const ALLOWED_PARAMS = new Set([
   'vote_count.gte'
 ]);
 
+function normalizeOrigin(value) {
+  return String(value || '').trim().replace(/\/$/, '');
+}
+
+function configureCors(req, res) {
+  const origin = normalizeOrigin(req.headers.origin);
+  const allowedOrigins = String(
+    process.env.BLOGGER_ORIGINS || process.env.BLOGGER_ORIGIN || ''
+  )
+    .split(',')
+    .map(normalizeOrigin)
+    .filter(Boolean);
+
+  if (!origin) return { allowed: true, origin: '' };
+
+  // Set BLOGGER_ORIGINS to exact origin(s), comma-separated, e.g.
+  // https://example.blogspot.com,https://www.example.com
+  if (!allowedOrigins.includes(origin)) {
+    return { allowed: false, origin };
+  }
+
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  return { allowed: true, origin };
+}
+
 export default async function handler(req, res) {
   try {
+    const cors = configureCors(req, res);
+
+    if (!cors.allowed) {
+      return res.status(403).json({
+        error: 'Origin tidak diizinkan. Atur BLOGGER_ORIGINS di environment Vercel.'
+      });
+    }
+
+    // Browser may send a preflight request before a cross-origin request.
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Allow', 'GET, OPTIONS');
+      return res.status(204).end();
+    }
+
     if (req.method !== 'GET') {
-      res.setHeader('Allow', 'GET');
+      res.setHeader('Allow', 'GET, OPTIONS');
       return res.status(405).json({ error: 'Method not allowed' });
     }
 

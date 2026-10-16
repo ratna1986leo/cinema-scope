@@ -510,23 +510,27 @@
          function getMediaKey(type, id) { return `${type}-${id}`; }
          function slugify(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
          async function tmdbFetch(endpoint) {
+             const url = new URL(`https://api.themoviedb.org/3${endpoint}`);
+             url.searchParams.set('api_key', DEFAULT_API_KEY);
+             const controller = new AbortController();
+             const timeout = setTimeout(() => controller.abort(), 15000);
              try {
-                 const url = new URL(`https://api.themoviedb.org/3${endpoint}`);
-                 // API key TMDB v3 dikirim melalui parameter api_key, bukan Bearer token.
-                 url.searchParams.set('api_key', DEFAULT_API_KEY);
-                 const headers = { 'Accept': 'application/json' };
-                 const controller = new AbortController();
-                 const timeout = setTimeout(() => controller.abort(), 25000);
-                 try {
-                     const res = await fetch(url.toString(), { headers, signal: controller.signal, cache: 'no-store' });
-                     if (!res.ok) throw new Error(`TMDB HTTP ${res.status} (${endpoint})`);
-                     return res;
-                 } finally {
-                     clearTimeout(timeout);
+                 const res = await fetch(url.toString(), {
+                     headers: { 'Accept': 'application/json' },
+                     signal: controller.signal,
+                     cache: 'no-store'
+                 });
+                 if (!res.ok) {
+                     console.error(`TMDB HTTP ${res.status}:`, endpoint);
+                     return { ok: false, json: async () => ({ results: [] }) };
                  }
-             } catch(err) {
-                 console.error('TMDB request failed:', endpoint, err);
+                 return res;
+             } catch (err) {
+                 if (err?.name === 'AbortError') console.error('TMDB timeout (15 detik):', endpoint);
+                 else console.error('TMDB network error:', endpoint, err);
                  return { ok: false, json: async () => ({ results: [] }) };
+             } finally {
+                 clearTimeout(timeout);
              }
          }
          function normalizeTMDBItem(item) {
@@ -553,83 +557,71 @@
          }
          // ========== FETCH DATA ==========
          async function fetchTMDBCatalogs() {
+             const genreEl = document.getElementById('genre-filter');
+             const yearEl = document.getElementById('year-filter');
+             const genreId = genreEl ? genreEl.value : '';
+             const yearVal = yearEl ? yearEl.value : '';
+             let endpointAppend = '';
+             if (genreId) endpointAppend += `&with_genres=${genreId}`;
+             const movieYear = yearVal ? `&primary_release_year=${encodeURIComponent(yearVal)}` : '';
+             const tvYear = yearVal ? `&first_air_date_year=${encodeURIComponent(yearVal)}` : '';
+
+             // Jalankan request katalog bersamaan supaya satu request lambat tidak menahan semua katalog.
+             const endpoints = {
+                 trending: '/trending/all/week?language=id-ID',
+                 movies: `/discover/movie?language=id-ID&sort_by=popularity.desc${endpointAppend}${movieYear}`,
+                 series: `/discover/tv?language=id-ID&sort_by=popularity.desc${endpointAppend}${tvYear}`,
+                 thriller: `/discover/movie?language=id-ID&with_genres=53&sort_by=popularity.desc${movieYear}`,
+                 westernSeries: '/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=US|GB|CA|AU',
+                 koreaSeries: '/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=KR',
+                 indiaSeries: '/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=IN',
+                 asiaMovies: '/discover/movie?language=id-ID&sort_by=popularity.desc&with_origin_country=KR|JP|CN|IN',
+                 indonesiaMovies: '/discover/movie?language=id-ID&sort_by=popularity.desc&with_origin_country=ID'
+             };
              try {
-                 const genreEl = document.getElementById('genre-filter');
-                 const yearEl = document.getElementById('year-filter');
-                 const genreId = genreEl ? genreEl.value : '';
-                 const yearVal = yearEl ? yearEl.value : '';
-                 let endpointAppend = '';
-                 if (genreId) endpointAppend += `&with_genres=${genreId}`;
-                 const movieYear = yearVal ? `&primary_release_year=${encodeURIComponent(yearVal)}` : '';
-                 const tvYear = yearVal ? `&first_air_date_year=${encodeURIComponent(yearVal)}` : '';
+                 const entries = Object.entries(endpoints);
+                 const responses = await Promise.all(entries.map(async ([key, endpoint]) => {
+                     const res = await tmdbFetch(endpoint);
+                     if (!res?.ok) return [key, null];
+                     try { return [key, await res.json()]; }
+                     catch (err) { console.error('TMDB JSON parse failed:', endpoint, err); return [key, null]; }
+                 }));
+                 const dataByKey = Object.fromEntries(responses);
                  let fetchedAny = false;
-                 const resTrending = await tmdbFetch(`/trending/all/week?language=id-ID`);
-                 if (resTrending?.ok) {
-                     const data = await resTrending.json();
-                     if (data?.results?.length) {
-                         state.trendingData = data.results.filter(x => (x.media_type === 'movie' || x.media_type === 'tv') && (!yearVal || (x.release_date || x.first_air_date || '').startsWith(yearVal))).map(normalizeTMDBItem).filter(Boolean);
-                         state.heroItems = state.trendingData.slice(0, 5);
-                         fetchedAny = true;
-                     }
-                 }
-                 const resMovies = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc${endpointAppend}${movieYear}`);
-                 if (resMovies?.ok) {
-                     const data = await resMovies.json();
-                     if (data?.results?.length) {
-                         state.moviesData = data.results.map(normalizeTMDBItem).filter(Boolean);
-                         fetchedAny = true;
-                     }
-                 }
-                 const resTV = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc${endpointAppend}${tvYear}`);
-                 if (resTV?.ok) {
-                     const data = await resTV.json();
-                     if (data?.results?.length) {
-                         state.seriesData = data.results.map(normalizeTMDBItem).filter(Boolean);
-                         fetchedAny = true;
-                     }
-                 }
-                 const resThriller = await tmdbFetch(`/discover/movie?language=id-ID&with_genres=53&sort_by=popularity.desc${movieYear}`);
-                 if (resThriller?.ok) {
-                     const data = await resThriller.json();
-                     if (data?.results?.length) {
-                         state.thrillerData = data.results.map(normalizeTMDBItem).filter(Boolean);
-                         fetchedAny = true;
-                     }
-                 }
-                 // Tambahan katalog berdasarkan negara/wilayah
-                 const resWesternSeries = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=US|GB|CA|AU`);
-                 if (resWesternSeries?.ok) {
-                     const data = await resWesternSeries.json();
-                     if (data?.results?.length) state.westernSeriesData = data.results.map(normalizeTMDBItem).filter(Boolean);
-                 }
 
-                 const resKoreaSeries = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=KR`);
-                 if (resKoreaSeries?.ok) {
-                     const data = await resKoreaSeries.json();
-                     if (data?.results?.length) state.koreaSeriesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                 const trending = dataByKey.trending?.results;
+                 if (trending?.length) {
+                     state.trendingData = trending
+                         .filter(x => (x.media_type === 'movie' || x.media_type === 'tv') && (!yearVal || (x.release_date || x.first_air_date || '').startsWith(yearVal)))
+                         .map(normalizeTMDBItem).filter(Boolean);
+                     state.heroItems = state.trendingData.slice(0, 5);
+                     fetchedAny = true;
                  }
-
-                 const resIndiaSeries = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=IN`);
-                 if (resIndiaSeries?.ok) {
-                     const data = await resIndiaSeries.json();
-                     if (data?.results?.length) state.indiaSeriesData = data.results.map(normalizeTMDBItem).filter(Boolean);
-                 }
-
-                 const resAsiaMovies = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc&with_origin_country=KR|JP|CN|IN`);
-                 if (resAsiaMovies?.ok) {
-                     const data = await resAsiaMovies.json();
-                     if (data?.results?.length) state.asiaMoviesData = data.results.map(normalizeTMDBItem).filter(Boolean);
-                 }
-
-                 const resIndonesiaMovies = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc&with_origin_country=ID`);
-                 if (resIndonesiaMovies?.ok) {
-                     const data = await resIndonesiaMovies.json();
-                     if (data?.results?.length) state.indonesiaMoviesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                 for (const key of ['movies', 'series', 'thriller', 'westernSeries', 'koreaSeries', 'indiaSeries', 'asiaMovies', 'indonesiaMovies']) {
+                     const results = dataByKey[key]?.results;
+                     if (!results?.length) continue;
+                     const target = {
+                         movies: 'moviesData',
+                         series: 'seriesData',
+                         thriller: 'thrillerData',
+                         westernSeries: 'westernSeriesData',
+                         koreaSeries: 'koreaSeriesData',
+                         indiaSeries: 'indiaSeriesData',
+                         asiaMovies: 'asiaMoviesData',
+                         indonesiaMovies: 'indonesiaMoviesData'
+                     }[key];
+                     state[target] = results.map(item => normalizeTMDBItem({
+                         ...item,
+                         ...(key === 'movies' || key === 'thriller' || key === 'asiaMovies' || key === 'indonesiaMovies' ? {media_type:'movie'} : {}),
+                         ...(key === 'series' || key === 'westernSeries' || key === 'koreaSeries' || key === 'indiaSeries' ? {media_type:'tv'} : {})
+                     })).filter(Boolean);
+                     if (['movies', 'series', 'thriller'].includes(key)) fetchedAny = true;
                  }
                  if (fetchedAny) setupHeroCarousel();
-                 else console.warn('Tidak ada katalog TMDB yang berhasil dimuat; menampilkan data cadangan.');
+                 else console.warn('TMDB belum mengembalikan katalog; data cadangan tetap ditampilkan. Periksa error HTTP/timeout di Console.');
                  renderAllSections();
              } catch (err) {
+                 console.error('Gagal memproses katalog TMDB:', err);
                  renderAllSections();
              }
          }

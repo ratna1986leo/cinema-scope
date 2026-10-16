@@ -456,7 +456,7 @@
          // ============================================
          window.addEventListener('error', (e) => { console.error('Website error:', e.error || e.message); });
          window.addEventListener('unhandledrejection', (e) => { console.error('Unhandled promise rejection:', e.reason); });
-         const DEFAULT_API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlOWE0MjVkOWE5NWIxOWNlZWNmNWY3NjM0OTFhMTZhMiIsIm5iZiI6MTc4NjcwODk3NS45NDMsInN1YiI6IjZhN2YwM2VmYWRhZTA1MzllZWI3YTUwMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tYWz-uha4q8nvwC1HTDd_KUgjGAdMFSPbOzZrkE3hoY";
+         const DEFAULT_API_KEY = "cf418b99f0619c5f51df73bc86769e8e";
          const FALLBACK_MOVIES = [
              { id: 939243, title: "Avatar: Fire and Ash", type: "movie", rating: "8.9", year: "2026", genre: "Sci-Fi, Adventure", overview: "Lanjutan epik petualangan di Pandora dengan visual memukau dan pertempuran klan baru.", poster_path: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" },
              { id: 533535, title: "Deadpool & Wolverine", type: "movie", rating: "8.1", year: "2024", genre: "Action, Comedy", overview: "Duet kocak dan brutal antara Wade Wilson dan Logan menyelamatkan multiverse.", poster_path: "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg" },
@@ -511,12 +511,14 @@
          function slugify(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
          async function tmdbFetch(endpoint) {
              try {
-                 const url = `https://api.themoviedb.org/3${endpoint}`;
-                 const headers = { 'Accept': 'application/json', 'Authorization': `Bearer ${DEFAULT_API_KEY}` };
+                 const url = new URL(`https://api.themoviedb.org/3${endpoint}`);
+                 // API key TMDB v3 dikirim melalui parameter api_key, bukan Bearer token.
+                 url.searchParams.set('api_key', DEFAULT_API_KEY);
+                 const headers = { 'Accept': 'application/json' };
                  const controller = new AbortController();
                  const timeout = setTimeout(() => controller.abort(), 25000);
                  try {
-                     const res = await fetch(url, { headers, signal: controller.signal, cache: 'no-store' });
+                     const res = await fetch(url.toString(), { headers, signal: controller.signal, cache: 'no-store' });
                      if (!res.ok) throw new Error(`TMDB HTTP ${res.status} (${endpoint})`);
                      return res;
                  } finally {

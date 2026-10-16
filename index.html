@@ -456,8 +456,8 @@
          // ============================================
          window.addEventListener('error', (e) => { console.error('Website error:', e.error || e.message); });
          window.addEventListener('unhandledrejection', (e) => { console.error('Unhandled promise rejection:', e.reason); });
-         // Isi setelah deploy Cloudflare Worker, contoh: https://cinema-scope-tmdb.USER.workers.dev
-// Untuk penggunaan Blogger, arahkan TMDB_PROXY_BASE ke URL Worker milikmu.
+         // Isi setelah deploy backend Render, contoh: https://cinema-scope-tmdb.onrender.com/api/tmdb
+// Untuk Blogger, gunakan URL lengkap Render sampai /api/tmdb.
 const TMDB_PROXY_BASE = '';
 const DEFAULT_API_KEY = "a45cdae790f09cee394b716b3115b84f";
          const FALLBACK_MOVIES = [
@@ -516,7 +516,7 @@ const DEFAULT_API_KEY = "a45cdae790f09cee394b716b3115b84f";
          async function tmdbFetch(endpoint) {
              const tmdbUrl = new URL(`https://api.themoviedb.org/3${endpoint}`);
 
-             // Blogger/static hosting: gunakan Cloudflare Worker bila TMDB_PROXY_BASE sudah diisi.
+             // Blogger/static hosting: gunakan proxy Render atau layanan proxy lain bila TMDB_PROXY_BASE sudah diisi.
              // Saat Worker aktif, jangan fallback ke direct TMDB karena itu mengekspos API key browser.
              if (String(TMDB_PROXY_BASE || '').trim()) {
                  let workerUrl;
@@ -562,17 +562,17 @@ const DEFAULT_API_KEY = "a45cdae790f09cee394b716b3115b84f";
                      } catch (err) {
                          clearTimeout(timeoutId);
                          lastError = err;
-                         console.warn(`Cloudflare Worker percobaan ${attempt}/2 gagal:`, err?.name || err?.message || err);
+                         console.warn(`Render proxy percobaan ${attempt}/2 gagal:`, err?.name || err?.message || err);
                      }
                      if (attempt < 2) {
                          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
                      }
                  }
 
-                 console.error('Cloudflare Worker tidak bisa diakses:', lastError);
+                 console.error('Render proxy tidak bisa diakses:', lastError);
                  if (!state.tmdbWarningShown) {
                      state.tmdbWarningShown = true;
-                     showToast('Worker tidak dapat diakses. Periksa URL Worker dan CORS Blogger.', '⚠️');
+                     showToast('Proxy tidak dapat diakses. Periksa URL Render dan CORS Blogger.', '⚠️');
                  }
                  return { ok: false, status: 0 };
              }
@@ -627,14 +627,14 @@ const DEFAULT_API_KEY = "a45cdae790f09cee394b716b3115b84f";
 
                      const contentType = res.headers.get('content-type') || '';
                      if (res.status === 404 && !contentType.toLowerCase().includes('application/json')) {
-                         console.info('Endpoint /api/tmdb tidak tersedia; menggunakan fallback TMDB langsung.');
+                         console.info('Endpoint /api/tmdb tidak tersedia; mencoba fallback TMDB langsung untuk hosting lama.');
                          return await directTMDBFallback();
                      }
 
                      if ([401, 403].includes(res.status)) {
                          if (!state.tmdbWarningShown) {
                              state.tmdbWarningShown = true;
-                             showToast('TMDB menolak API key server. Periksa konfigurasi backend.', '⚠️');
+                             showToast('TMDB menolak permintaan proxy. Periksa API key backend.', '⚠️');
                          }
                          console.error(`TMDB proxy HTTP ${res.status} pada ${endpoint}`);
                          return { ok: false, status: res.status };

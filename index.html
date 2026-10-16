@@ -560,6 +560,7 @@
                      type: mediaType,
                      rating: typeof item.vote_average === 'number' ? item.vote_average.toFixed(1) : '—',
                      year,
+                     releaseDate,
                      genre: (item.genres || []).map(g => g.name).join(', ') || (item.genre_ids || []).map(id => TMDB_GENRES[id] || id).join(', ') || 'Tidak diketahui',
                      overview: item.overview || 'Tidak ada deskripsi tersedia.',
                      poster_path: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://placehold.co/400x600/18181b/ff5c00?text=No+Poster',
@@ -676,8 +677,8 @@
              if (movieRes?.ok) { const data = await movieRes.json(); results = results.concat((data.results || []).map(x => normalizeTMDBItem({...x, media_type:'movie'}))); }
              if (tvRes?.ok) { const data = await tvRes.json(); results = results.concat((data.results || []).map(x => normalizeTMDBItem({...x, media_type:'tv'}))); }
              results = results.filter(Boolean).sort((a,b) => {
-                 const dateA = a.year === '—' ? '' : a.year;
-                 const dateB = b.year === '—' ? '' : b.year;
+                 const dateA = a.releaseDate || '';
+                 const dateB = b.releaseDate || '';
                  return dateB.localeCompare(dateA) || Number(b.rating) - Number(a.rating);
              });
              state.genreData = results;

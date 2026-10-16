@@ -500,7 +500,8 @@
              currentServer: 1,
              currentSeason: 1,
              currentEpisode: 1,
-             trailerKey: ''
+             trailerKey: '',
+             tmdbWarningShown: false
          };
          try {
              state.watchlist = JSON.parse(localStorage.getItem('lt21_watchlist') || '[]');
@@ -512,9 +513,6 @@
          async function tmdbFetch(endpoint) {
              const url = new URL(`https://api.themoviedb.org/3${endpoint}`);
              url.searchParams.set('api_key', DEFAULT_API_KEY);
-
-             // Samakan pola request dengan repo percobaan: timeout 10 detik, 2 percobaan,
-             // jeda eksponensial, tanpa opsi fetch tambahan yang tidak dipakai situs referensi.
              let lastError = null;
              for (let attempt = 1; attempt <= 2; attempt++) {
                  const controller = new AbortController();
@@ -523,12 +521,17 @@
                      const res = await fetch(url.toString(), { signal: controller.signal });
                      clearTimeout(timeoutId);
                      if (res.ok) return res;
-
                      const message = `TMDB HTTP ${res.status} pada ${endpoint}`;
                      console.error(message);
                      if ([401, 403].includes(res.status)) {
-                         return { ok: false, json: async () => ({ results: [] }) };
+                         if (!state.tmdbWarningShown) {
+                             state.tmdbWarningShown = true;
+                             showToast('TMDB menolak permintaan. Periksa API key TMDB.', '⚠️');
+                         }
+                         return { ok: false, status: res.status };
                      }
+                     // Kesalahan request 4xx selain 429 biasanya tidak akan membaik dengan retry.
+                     if (res.status < 500 && res.status !== 429) return { ok: false, status: res.status };
                      lastError = new Error(message);
                  } catch (err) {
                      clearTimeout(timeoutId);
@@ -537,9 +540,12 @@
                  }
                  if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt - 1)));
              }
-
              if (lastError) console.error('TMDB gagal setelah percobaan ulang:', endpoint, lastError);
-             return { ok: false, json: async () => ({ results: [] }) };
+             if (!state.tmdbWarningShown) {
+                 state.tmdbWarningShown = true;
+                 showToast('TMDB gagal dimuat. Periksa koneksi atau API key.', '⚠️');
+             }
+             return { ok: false, status: lastError?.status };
          }
          function normalizeTMDBItem(item) {
              try {
@@ -575,16 +581,18 @@
              const tvYear = yearVal ? `&first_air_date_year=${encodeURIComponent(yearVal)}` : '';
 
              // Jalankan request katalog bersamaan supaya satu request lambat tidak menahan semua katalog.
+             const today = new Date().toISOString().slice(0, 10);
              const endpoints = {
+                 // Trending tetap berdasarkan tren; katalog lain diurutkan tanggal rilis terbaru.
                  trending: '/trending/all/week?language=id-ID',
-                 movies: `/discover/movie?language=id-ID&sort_by=popularity.desc${endpointAppend}${movieYear}`,
-                 series: `/discover/tv?language=id-ID&sort_by=popularity.desc${endpointAppend}${tvYear}`,
-                 thriller: `/discover/movie?language=id-ID&with_genres=53&sort_by=popularity.desc${movieYear}`,
-                 westernSeries: '/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=US|GB|CA|AU',
-                 koreaSeries: '/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=KR',
-                 indiaSeries: '/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=IN',
-                 asiaMovies: '/discover/movie?language=id-ID&sort_by=popularity.desc&with_origin_country=KR|JP|CN|IN',
-                 indonesiaMovies: '/discover/movie?language=id-ID&sort_by=popularity.desc&with_origin_country=ID'
+                 movies: `/discover/movie?language=id-ID&sort_by=primary_release_date.desc&primary_release_date.lte=${today}${endpointAppend}${movieYear}`,
+                 series: `/discover/tv?language=id-ID&sort_by=first_air_date.desc&first_air_date.lte=${today}${endpointAppend}${tvYear}`,
+                 thriller: `/discover/movie?language=id-ID&with_genres=53&sort_by=primary_release_date.desc&primary_release_date.lte=${today}${movieYear}`,
+                 westernSeries: `/discover/tv?language=id-ID&sort_by=first_air_date.desc&first_air_date.lte=${today}&with_origin_country=US|GB|CA|AU`,
+                 koreaSeries: `/discover/tv?language=id-ID&sort_by=first_air_date.desc&first_air_date.lte=${today}&with_origin_country=KR`,
+                 indiaSeries: `/discover/tv?language=id-ID&sort_by=first_air_date.desc&first_air_date.lte=${today}&with_origin_country=IN`,
+                 asiaMovies: `/discover/movie?language=id-ID&sort_by=primary_release_date.desc&primary_release_date.lte=${today}&with_origin_country=KR|JP|CN|IN`,
+                 indonesiaMovies: `/discover/movie?language=id-ID&sort_by=primary_release_date.desc&primary_release_date.lte=${today}&with_origin_country=ID`
              };
              try {
                  const entries = Object.entries(endpoints);
@@ -609,19 +617,21 @@
                  };
                  await Promise.all(Array.from({ length: Math.min(4, entries.length) }, () => worker()));
                  const dataByKey = Object.fromEntries(responses);
-                 let fetchedAny = false;
+                 // Respons sukses dengan results=[] harus mengosongkan katalog, bukan menampilkan data lama.
+                 let fetchedAny = Object.values(dataByKey).some(data => data && Array.isArray(data.results));
 
                  const trending = dataByKey.trending?.results;
-                 if (trending?.length) {
+                 if (Array.isArray(trending)) {
                      state.trendingData = trending
                          .filter(x => (x.media_type === 'movie' || x.media_type === 'tv') && (!yearVal || (x.release_date || x.first_air_date || '').startsWith(yearVal)))
                          .map(normalizeTMDBItem).filter(Boolean);
                      state.heroItems = state.trendingData.slice(0, 5);
-                     fetchedAny = true;
+                     state.currentHeroIndex = 0;
                  }
                  for (const key of ['movies', 'series', 'thriller', 'westernSeries', 'koreaSeries', 'indiaSeries', 'asiaMovies', 'indonesiaMovies']) {
-                     const results = dataByKey[key]?.results;
-                     if (!results?.length) continue;
+                     const payload = dataByKey[key];
+                     if (!payload || !Array.isArray(payload.results)) continue;
+                     const results = payload.results;
                      const target = {
                          movies: 'moviesData',
                          series: 'seriesData',
@@ -639,8 +649,12 @@
                      })).filter(Boolean);
                      if (['movies', 'series', 'thriller'].includes(key)) fetchedAny = true;
                  }
-                 if (fetchedAny) setupHeroCarousel();
-                 else console.warn('TMDB belum mengembalikan katalog; data cadangan tetap ditampilkan. Periksa error HTTP/timeout di Console.');
+                 if (fetchedAny) {
+                     state.tmdbWarningShown = false;
+                     if (state.heroItems.length) setupHeroCarousel();
+                 } else {
+                     console.warn('Tidak ada respons katalog TMDB yang berhasil; data terakhir yang tersedia tetap ditampilkan. Periksa API key/koneksi di Console.');
+                 }
                  renderAllSections();
              } catch (err) {
                  console.error('Gagal memproses katalog TMDB:', err);
@@ -653,14 +667,19 @@
              const yearVal = yearEl ? yearEl.value : '';
              const mobileYear = document.getElementById('mobile-year-filter');
              const effectiveYear = yearVal || (mobileYear ? mobileYear.value : '');
-             const yearMovie = effectiveYear ? `&primary_release_year=${effectiveYear}` : '';
-             const yearTv = effectiveYear ? `&first_air_date_year=${effectiveYear}` : '';
-             const movieRes = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc&with_genres=${state.activeGenreId}${yearMovie}`);
-             const tvRes = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc&with_genres=${state.activeGenreId}${yearTv}`);
+             const today = new Date().toISOString().slice(0, 10);
+             const yearMovie = effectiveYear ? `&primary_release_year=${encodeURIComponent(effectiveYear)}` : '';
+             const yearTv = effectiveYear ? `&first_air_date_year=${encodeURIComponent(effectiveYear)}` : '';
+             const movieRes = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=primary_release_date.desc&primary_release_date.lte=${today}&with_genres=${state.activeGenreId}${yearMovie}`);
+             const tvRes = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=first_air_date.desc&first_air_date.lte=${today}&with_genres=${state.activeGenreId}${yearTv}`);
              let results = [];
              if (movieRes?.ok) { const data = await movieRes.json(); results = results.concat((data.results || []).map(x => normalizeTMDBItem({...x, media_type:'movie'}))); }
              if (tvRes?.ok) { const data = await tvRes.json(); results = results.concat((data.results || []).map(x => normalizeTMDBItem({...x, media_type:'tv'}))); }
-             results = results.filter(Boolean).sort((a,b) => Number(b.rating) - Number(a.rating));
+             results = results.filter(Boolean).sort((a,b) => {
+                 const dateA = a.year === '—' ? '' : a.year;
+                 const dateB = b.year === '—' ? '' : b.year;
+                 return dateB.localeCompare(dateA) || Number(b.rating) - Number(a.rating);
+             });
              state.genreData = results;
              const grid = document.getElementById('genre-grid');
              const count = document.getElementById('genre-page-count');
@@ -741,7 +760,7 @@ function scrollCarousel(elementId, distance) {
              const container = document.getElementById(elementId);
              if (!container) return;
              if (!items || items.length === 0) {
-                 container.innerHTML = `<div class="p-4 text-xs text-zinc-500">Memuat katalog film...</div>`;
+                 container.innerHTML = `<div class="p-4 text-xs text-zinc-500">Tidak ada judul yang cocok dengan filter ini.</div>`;
                  return;
              }
              container.innerHTML = items.map(item => createCardHTML(item)).join('');
@@ -1091,34 +1110,39 @@ function scrollCarousel(elementId, distance) {
              searchDebounce = setTimeout(() => executeSearch(query, false), 400);
          }
          async function executeSearch(query, updateHistory = true) {
+             query = String(query || '').trim();
+             if (!query) return;
              state.searchQuery = query;
              const searchPageInput = document.getElementById('search-page-input');
              if (searchPageInput) searchPageInput.value = query;
-             document.getElementById('search-query-text').textContent = `"${query}"`;
-             let tmdbMatches = [];
-             const res = await tmdbFetch(`/search/multi?language=id-ID&query=${encodeURIComponent(query)}`);
-             if (res?.ok) {
-                 const data = await res.json();
-                 if (data?.results) {
-                     tmdbMatches = data.results
-                         .filter(x => x.media_type === 'movie' || x.media_type === 'tv')
-                         .map(normalizeTMDBItem)
-                         .filter(Boolean);
-                 }
-             }
-             if (tmdbMatches.length === 0) {
-                 const qLower = query.toLowerCase();
-                 tmdbMatches = [...FALLBACK_MOVIES, ...FALLBACK_SERIES].filter(item =>
-                     item.title.toLowerCase().includes(qLower)
-                 );
-             }
+             const queryText = document.getElementById('search-query-text');
+             if (queryText) queryText.textContent = `"${query}"`;
              const searchGrid = document.getElementById('search-grid');
              const searchCount = document.getElementById('search-count');
-             searchCount.textContent = `${tmdbMatches.length} Film Ditemukan`;
-             if (tmdbMatches.length === 0) {
-                 searchGrid.innerHTML = `<div class="col-span-full py-8 text-center text-zinc-500 text-sm">Tidak ditemukan hasil untuk "${query}".</div>`;
-             } else {
-                 searchGrid.innerHTML = tmdbMatches.map(item => createCardHTML(item)).join('');
+             if (searchGrid) searchGrid.innerHTML = `<div class="col-span-full py-8 text-center text-zinc-500 text-sm">Memuat hasil dari TMDB...</div>`;
+             const res = await tmdbFetch(`/search/multi?language=id-ID&query=${encodeURIComponent(query)}`);
+             let tmdbMatches = [];
+             let requestFailed = !res?.ok;
+             if (res?.ok) {
+                 try {
+                     const data = await res.json();
+                     tmdbMatches = (Array.isArray(data?.results) ? data.results : [])
+                         .filter(x => x.media_type === 'movie' || x.media_type === 'tv')
+                         .map(normalizeTMDBItem).filter(Boolean);
+                 } catch (err) {
+                     requestFailed = true;
+                     console.error('Gagal membaca hasil pencarian TMDB:', err);
+                 }
+             }
+             if (searchCount) searchCount.textContent = requestFailed ? 'Gagal memuat' : `${tmdbMatches.length} Film/Series Ditemukan`;
+             if (searchGrid) {
+                 if (requestFailed) {
+                     searchGrid.innerHTML = `<div class="col-span-full py-8 text-center text-amber-400 text-sm">TMDB gagal memuat pencarian. Periksa API key atau koneksi, lalu coba lagi.</div>`;
+                 } else if (tmdbMatches.length === 0) {
+                     searchGrid.innerHTML = `<div class="col-span-full py-8 text-center text-zinc-500 text-sm">Tidak ditemukan hasil untuk "${query}".</div>`;
+                 } else {
+                     searchGrid.innerHTML = tmdbMatches.map(item => createCardHTML(item)).join('');
+                 }
              }
              document.getElementById('search-section').classList.remove('hidden');
              setTimeout(updateTvFocusables, 200);

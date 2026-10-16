@@ -1,0 +1,13 @@
+{
+  "name": "cinema-scope",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cinema Scope website with a secure TMDB API proxy for Render",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

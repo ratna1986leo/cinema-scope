@@ -456,7 +456,7 @@
          // ============================================
          window.addEventListener('error', (e) => { console.error('Website error:', e.error || e.message); });
          window.addEventListener('unhandledrejection', (e) => { console.error('Unhandled promise rejection:', e.reason); });
-         const DEFAULT_API_KEY = "cf418b99f0619c5f51df73bc86769e8e";
+         const DEFAULT_API_KEY = "a45cdae790f09cee394b716b3115b84f";
          const FALLBACK_MOVIES = [
              { id: 939243, title: "Avatar: Fire and Ash", type: "movie", rating: "8.9", year: "2026", genre: "Sci-Fi, Adventure", overview: "Lanjutan epik petualangan di Pandora dengan visual memukau dan pertempuran klan baru.", poster_path: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" },
              { id: 533535, title: "Deadpool & Wolverine", type: "movie", rating: "8.1", year: "2024", genre: "Action, Comedy", overview: "Duet kocak dan brutal antara Wade Wilson dan Logan menyelamatkan multiverse.", poster_path: "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg" },
@@ -512,26 +512,36 @@
          async function tmdbFetch(endpoint) {
              const url = new URL(`https://api.themoviedb.org/3${endpoint}`);
              url.searchParams.set('api_key', DEFAULT_API_KEY);
-             const controller = new AbortController();
-             const timeout = setTimeout(() => controller.abort(), 15000);
-             try {
-                 const res = await fetch(url.toString(), {
-                     headers: { 'Accept': 'application/json' },
-                     signal: controller.signal,
-                     cache: 'no-store'
-                 });
-                 if (!res.ok) {
-                     console.error(`TMDB HTTP ${res.status}:`, endpoint);
-                     return { ok: false, json: async () => ({ results: [] }) };
+
+             // Mengikuti pola retry pada situs referensi: request dicoba ulang jika timeout/gagal jaringan.
+             let lastError = null;
+             for (let attempt = 1; attempt <= 3; attempt++) {
+                 const controller = new AbortController();
+                 const timeoutId = setTimeout(() => controller.abort(), 10000);
+                 try {
+                     const res = await fetch(url.toString(), {
+                         headers: { 'Accept': 'application/json' },
+                         signal: controller.signal,
+                         cache: 'no-store'
+                     });
+                     clearTimeout(timeoutId);
+                     if (res.ok) return res;
+
+                     const message = `TMDB HTTP ${res.status} pada ${endpoint}`;
+                     console.error(message);
+                     // Error autentikasi/akses tidak akan membaik dengan retry.
+                     if ([401, 403].includes(res.status)) break;
+                     lastError = new Error(message);
+                 } catch (err) {
+                     clearTimeout(timeoutId);
+                     lastError = err;
+                     console.warn(`TMDB percobaan ${attempt}/3 gagal:`, endpoint, err?.name || err?.message || err);
                  }
-                 return res;
-             } catch (err) {
-                 if (err?.name === 'AbortError') console.error('TMDB timeout (15 detik):', endpoint);
-                 else console.error('TMDB network error:', endpoint, err);
-                 return { ok: false, json: async () => ({ results: [] }) };
-             } finally {
-                 clearTimeout(timeout);
+                 if (attempt < 3) await new Promise(resolve => setTimeout(resolve, 700 * attempt));
              }
+
+             if (lastError) console.error('TMDB gagal setelah percobaan ulang:', endpoint, lastError);
+             return { ok: false, json: async () => ({ results: [] }) };
          }
          function normalizeTMDBItem(item) {
              try {

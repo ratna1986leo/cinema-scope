@@ -511,39 +511,98 @@
          function getMediaKey(type, id) { return `${type}-${id}`; }
          function slugify(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
          async function tmdbFetch(endpoint) {
-             const url = new URL(`https://api.themoviedb.org/3${endpoint}`);
-             url.searchParams.set('api_key', DEFAULT_API_KEY);
+             const tmdbUrl = new URL(`https://api.themoviedb.org/3${endpoint}`);
+             const proxyUrl = new URL('/api/tmdb', window.location.origin);
+             proxyUrl.searchParams.set('path', tmdbUrl.pathname);
+             tmdbUrl.searchParams.forEach((value, key) => {
+                 if (key !== 'api_key') proxyUrl.searchParams.set(key, value);
+             });
+
+             // Utamakan proxy same-origin seperti pada nonton-gratisan agar key disimpan di environment server.
+             // Jika halaman masih di-host statis (mis. GitHub Pages) dan endpoint proxy tidak tersedia,
+             // pertahankan fallback direct lama agar situs tidak langsung rusak selama migrasi hosting.
+             async function directTMDBFallback() {
+                 const directUrl = new URL(tmdbUrl.toString());
+                 directUrl.searchParams.set('api_key', DEFAULT_API_KEY);
+                 let directError = null;
+                 for (let attempt = 1; attempt <= 2; attempt++) {
+                     const controller = new AbortController();
+                     const timeoutId = setTimeout(() => controller.abort(), 10000);
+                     try {
+                         const res = await fetch(directUrl.toString(), { signal: controller.signal, cache: 'no-store' });
+                         clearTimeout(timeoutId);
+                         if (res.ok) return res;
+                         console.error(`TMDB direct HTTP ${res.status} pada ${endpoint}`);
+                         if ([401, 403].includes(res.status)) {
+                             if (!state.tmdbWarningShown) {
+                                 state.tmdbWarningShown = true;
+                                 showToast('API key TMDB ditolak. Deploy ke Vercel dan atur TMDB_API_KEY.', '⚠️');
+                             }
+                             return { ok: false, status: res.status };
+                         }
+                         if (res.status < 500 && res.status !== 429) return { ok: false, status: res.status };
+                         directError = new Error(`TMDB HTTP ${res.status}`);
+                     } catch (err) {
+                         clearTimeout(timeoutId);
+                         directError = err;
+                         console.warn(`TMDB direct percobaan ${attempt}/2 gagal:`, endpoint, err?.message || err);
+                     }
+                     if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                 }
+                 console.error('TMDB direct gagal setelah percobaan ulang:', endpoint, directError);
+                 return { ok: false, status: directError?.status };
+             }
+
              let lastError = null;
              for (let attempt = 1; attempt <= 2; attempt++) {
                  const controller = new AbortController();
                  const timeoutId = setTimeout(() => controller.abort(), 10000);
                  try {
-                     const res = await fetch(url.toString(), { signal: controller.signal });
+                     const res = await fetch(proxyUrl.toString(), { signal: controller.signal, cache: 'no-store' });
                      clearTimeout(timeoutId);
                      if (res.ok) return res;
-                     const message = `TMDB HTTP ${res.status} pada ${endpoint}`;
-                     console.error(message);
+
+                     const contentType = res.headers.get('content-type') || '';
+                     // 404 HTML biasanya berarti situs masih berada di static hosting, bukan Vercel Functions.
+                     if (res.status === 404 && !contentType.toLowerCase().includes('application/json')) {
+                         console.info('Endpoint /api/tmdb tidak tersedia; menggunakan fallback TMDB langsung.');
+                         return await directTMDBFallback();
+                     }
+
                      if ([401, 403].includes(res.status)) {
                          if (!state.tmdbWarningShown) {
                              state.tmdbWarningShown = true;
-                             showToast('TMDB menolak permintaan. Periksa API key TMDB.', '⚠️');
+                             showToast('TMDB menolak API key server. Periksa environment TMDB_API_KEY di Vercel.', '⚠️');
                          }
+                         console.error(`TMDB proxy HTTP ${res.status} pada ${endpoint}`);
                          return { ok: false, status: res.status };
                      }
-                     // Kesalahan request 4xx selain 429 biasanya tidak akan membaik dengan retry.
+                     if (res.status === 500 && contentType.toLowerCase().includes('application/json')) {
+                         try {
+                             const body = await res.clone().json();
+                             if (String(body?.error || '').includes('TMDB_API_KEY')) {
+                                 showToast('Atur TMDB_API_KEY di Environment Variables Vercel.', '⚠️');
+                                 console.error('TMDB proxy configuration:', body.error);
+                                 return { ok: false, status: 500 };
+                             }
+                         } catch (_) {}
+                     }
+
+                     const message = `TMDB proxy HTTP ${res.status} pada ${endpoint}`;
+                     console.error(message);
                      if (res.status < 500 && res.status !== 429) return { ok: false, status: res.status };
                      lastError = new Error(message);
                  } catch (err) {
                      clearTimeout(timeoutId);
                      lastError = err;
-                     console.warn(`TMDB percobaan ${attempt}/2 gagal:`, endpoint, err?.name || err?.message || err);
+                     console.warn(`TMDB proxy percobaan ${attempt}/2 gagal:`, endpoint, err?.name || err?.message || err);
                  }
-                 if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt - 1)));
+                 if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
              }
-             if (lastError) console.error('TMDB gagal setelah percobaan ulang:', endpoint, lastError);
+             if (lastError) console.error('TMDB proxy gagal setelah percobaan ulang:', endpoint, lastError);
              if (!state.tmdbWarningShown) {
                  state.tmdbWarningShown = true;
-                 showToast('TMDB gagal dimuat. Periksa koneksi atau API key.', '⚠️');
+                 showToast('TMDB gagal dimuat. Periksa koneksi atau konfigurasi Vercel.', '⚠️');
              }
              return { ok: false, status: lastError?.status };
          }

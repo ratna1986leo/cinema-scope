@@ -514,7 +514,7 @@
                  const url = `https://api.themoviedb.org/3${endpoint}`;
                  const headers = { 'Accept': 'application/json', 'Authorization': `Bearer ${DEFAULT_API_KEY}` };
                  const controller = new AbortController();
-                 const timeout = setTimeout(() => controller.abort(), 12000);
+                 const timeout = setTimeout(() => controller.abort(), 25000);
                  try {
                      const res = await fetch(url, { headers, signal: controller.signal, cache: 'no-store' });
                      if (!res.ok) throw new Error(`TMDB HTTP ${res.status} (${endpoint})`);
@@ -688,7 +688,24 @@
                  current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
              }
          }
-         function scrollCarousel(elementId, distance) {
+         function initSmartTvControls() {
+    document.addEventListener('keydown', (event) => {
+        const target = event.target;
+        if (target && (target.matches('input, textarea, select') || target.isContentEditable)) return;
+        const directions = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
+        if (directions[event.key]) {
+            event.preventDefault();
+            navigateTv(directions[event.key]);
+        } else if (event.key === 'Enter' && tvIndex >= 0) {
+            const selected = tvFocusables[tvIndex];
+            if (selected && document.contains(selected)) {
+                event.preventDefault();
+                selected.click();
+            }
+        }
+    });
+}
+function scrollCarousel(elementId, distance) {
              const container = document.getElementById(elementId);
              if (container) container.scrollBy({ left: distance, behavior: 'smooth' });
          }

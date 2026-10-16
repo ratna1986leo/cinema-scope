@@ -1,0 +1,1232 @@
+ <!DOCTYPE html>
+ <html lang="id" class="dark">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+     <title>LayarTancap 21+++ - Nonton Film & TV Series Subtitle Indonesia Gratis</title>
+
+     <meta name="description" content="Nonton film bioskop, drama korea (drakor), anime, dan TV series subtitle Indonesia secara gratis di LayarTancap 21+++. Pemutar multi-server cepat, jernih, dan tanpa iklan mengganggu.">
+     <meta name="keywords" content="layartancap21, lk21, nonton film gratis, bioskop21, streaming film sub indo, drakor sub indo, anime sub indo, smart tv streaming">
+     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+     <meta name="author" content="LayarTancap 21+++">
+     <!-- Favicon SVG Data URI -->
+     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><path fill=%22%23ff5c00%22 d=%22M8 5v14l11-7z%22/></svg>">
+     <!-- Verifikasi Search Engine -->
+     <meta name="google-site-verification" content="hvjClL_eBtUIUR__ExsglmjPpdB8AZovm5CkvKPdFxE" />
+     <meta name="msvalidate.01" content="C34B61F3D297CB00DCDD5EC9D1D20C25" />
+
+     <link rel="canonical" href="https://reviewfilm21.github.io/" />
+
+     <!-- Open Graph / Facebook SEO -->
+     <meta property="og:type" content="website">
+     <meta property="og:title" content="LayarTancap 21+++ - Nonton Film Sub Indo Gratis">
+     <meta property="og:description" content="Nonton film sub indo gratis, streaming movie terbaru 2026. Layarkaca21, indoxxi alternatif.">
+     <meta property="og:site_name" content="LayarTancap 21+++">
+     <meta property="og:locale" content="id_ID">
+     <!-- Tailwind CSS CDN -->
+     <script src="https://cdn.tailwindcss.com/"></script>
+
+     <!-- Google Fonts -->
+     <link rel="preconnect" href="https://fonts.googleapis.com/">
+     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+     <script>
+         tailwind.config = {
+             darkMode: 'class',
+             theme: {
+                 extend: {
+                     colors: {
+                         brand: {
+                             50: '#fff7ed',
+                             100: '#ffedd5',
+                             500: '#ff5c00',
+                             600: '#ea4c00',
+                             700: '#c23800',
+                             dark: '#09090b',
+                             card: '#121217',
+                             border: '#27272a'
+                         }
+                     },
+                     fontFamily: {
+                         sans: ['Plus Jakarta Sans', 'sans-serif']
+                     }
+                 }
+             }
+         }
+     </script>
+     <style>
+         body {
+             background-color: #09090b;
+             color: #f4f4f5;
+             font-family: 'Plus Jakarta Sans', sans-serif;
+             overflow-x: hidden;
+             padding-bottom: env(safe-area-inset-bottom);
+         }
+         ::-webkit-scrollbar { width: 8px; height: 8px; }
+         ::-webkit-scrollbar-track { background: #09090b; }
+         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+         ::-webkit-scrollbar-thumb:hover { background: #ff5c00; }
+         .tv-focused {
+             outline: 4px solid #ff5c00 !important;
+             outline-offset: 4px !important;
+             transform: scale(1.05) !important;
+             z-index: 30 !important;
+             box-shadow: 0 0 25px rgba(255, 92, 0, 0.8) !important;
+             transition: all 0.15s ease-in-out !important;
+         }
+         .poster-card {
+             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+         }
+         @media (hover: hover) and (pointer: fine) {
+             .poster-card:hover {
+                 transform: translateY(-6px) scale(1.02);
+                 box-shadow: 0 12px 24px -8px rgba(255, 92, 0, 0.35);
+             }
+         }
+
+         .play-overlay {
+             opacity: 0;
+             transform: scale(0.8);
+             transition: all 0.25s ease-in-out;
+         }
+         @media (hover: hover) and (pointer: fine) {
+             .poster-card:hover .play-overlay { opacity: 1; transform: scale(1); }
+         }
+         .no-scrollbar::-webkit-scrollbar { display: none; }
+         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+         /* Sentuhan untuk perangkat layar sentuh */
+         @media (hover: none), (pointer: coarse) {
+             .poster-card:active {
+                 transform: scale(0.98);
+             }
+         }
+     </style>
+ </head>
+ <body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white pb-16 lg:pb-0">
+     <!-- Toast Notifikasi -->
+     <div id="toast" class="fixed top-5 right-5 z-[100] transform translate-y-[-100px] opacity-0 transition-all duration-300 bg-brand-500 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 font-semibold text-sm pointer-events-none">
+         <span id="toast-icon">ℹ️</span>
+         <span id="toast-message">Notifikasi</span>
+     </div>
+     <!-- ==================== HEADER ==================== -->
+     <header class="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800/80 transition-all">
+         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+             <div class="flex items-center justify-between h-14 sm:h-20 gap-2 sm:gap-4">
+
+                 <!-- Brand Logo -->
+                 <a href="https://reviewfilm21.github.io/" onclick="event.preventDefault(); navigateTo('home')" class="focusable flex items-center gap-2 group shrink-0 rounded-xl p-1 focus:outline-none" aria-label="LayarTancap 21 Beranda">
+                     <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                         <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                     </div>
+                     <div class="flex flex-col">
+                         <span class="text-lg sm:text-2xl font-black tracking-wider text-white leading-none">LAYAR<span class="text-brand-500">TANCAP</span></span>
+                         <span class="text-[8px] sm:text-[10px] tracking-widest text-zinc-400 font-bold uppercase">21+++ STREAMING</span>
+                     </div>
+                 </a>
+                 <!-- Desktop Menu Nav -->
+                 <nav class="hidden lg:flex items-center gap-0.5 xl:gap-1 text-xs xl:text-sm font-medium overflow-x-auto no-scrollbar" aria-label="Navigasi Utama">
+                     <button onclick="navigateTo('home')" id="nav-home" class="focusable px-2.5 xl:px-3 py-2 rounded-lg text-white bg-zinc-800/80 hover:text-brand-500 transition-colors">Beranda</button>
+                     <button onclick="navigateTo('action')" id="nav-action" class="focusable px-2.5 xl:px-3 py-2 rounded-lg text-zinc-300 hover:text-brand-500 hover:bg-zinc-900/80 transition-colors">Action</button>
+                     <button onclick="navigateTo('adventure')" id="nav-adventure" class="focusable px-2.5 xl:px-3 py-2 rounded-lg text-zinc-300 hover:text-brand-500 hover:bg-zinc-900/80 transition-colors">Adventure</button>
+                     <button onclick="navigateTo('comedy')" id="nav-comedy" class="focusable px-2.5 xl:px-3 py-2 rounded-lg text-zinc-300 hover:text-brand-500 hover:bg-zinc-900/80 transition-colors">Comedy</button>
+                     <button onclick="navigateTo('sci-fi')" id="nav-sci-fi" class="focusable px-2.5 xl:px-3 py-2 rounded-lg text-zinc-300 hover:text-brand-500 hover:bg-zinc-900/80 transition-colors">Sci-Fi</button>
+                     <button onclick="navigateTo('horror')" id="nav-horror" class="focusable px-2.5 xl:px-3 py-2 rounded-lg text-zinc-300 hover:text-brand-500 hover:bg-zinc-900/80 transition-colors">Horror</button>
+                     <button onclick="navigateTo('fantasy')" id="nav-fantasy" class="focusable px-2.5 xl:px-3 py-2 rounded-lg text-zinc-300 hover:text-brand-500 hover:bg-zinc-900/80 transition-colors">Fantasy</button>
+                     <button onclick="navigateTo('thriller')" id="nav-thriller" class="focusable px-2.5 xl:px-3 py-2 rounded-lg text-zinc-300 hover:text-brand-500 hover:bg-zinc-900/80 transition-colors">Thriller</button>
+                 </nav>
+                 <!-- Tahun + Search -->
+                 <div class="flex items-center gap-1.5 sm:gap-3">
+                     <select id="year-filter" onchange="applyFilters()" class="focusable bg-zinc-900 border border-zinc-800 rounded-xl py-2 px-3 text-xs text-zinc-300 focus:outline-none focus:border-brand-500" aria-label="Filter Tahun">
+                         <option value="">Semua Tahun</option>
+                         <option value="2026">2026</option>
+                         <option value="2025">2025</option>
+                         <option value="2024">2024</option>
+                         <option value="2023">2023</option>
+                         <option value="2022">2022</option>
+                     </select>
+                     <button onclick="navigateTo('search')" id="nav-search" class="focusable hidden sm:flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-xl py-2 px-3 text-xs text-zinc-300 hover:text-white hover:border-brand-500 transition-colors" aria-label="Cari Film">🔍 Cari</button>
+                 </div>
+                     <!-- Hamburger Menu -->
+                     <button onclick="toggleMobileMenu()" class="focusable lg:hidden p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white" aria-label="Buka Menu Mobile">
+                         <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+                     </button>
+                 </div>
+             </div>
+         </div>
+         <!-- Mobile Drawer Navigation -->
+         <div id="mobile-menu" class="hidden lg:hidden bg-zinc-950 border-b border-zinc-800 px-4 py-4 space-y-2 text-sm">
+             <button onclick="navigateTo('home'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-white hover:bg-zinc-900">🏠 Beranda</button>
+             <button onclick="navigateTo('action'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-zinc-300 hover:bg-zinc-900">💥 Action</button>
+             <button onclick="navigateTo('adventure'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-zinc-300 hover:bg-zinc-900">🗺️ Adventure</button>
+             <button onclick="navigateTo('comedy'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-zinc-300 hover:bg-zinc-900">😂 Comedy</button>
+             <button onclick="navigateTo('sci-fi'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-zinc-300 hover:bg-zinc-900">🚀 Sci-Fi</button>
+             <button onclick="navigateTo('horror'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-zinc-300 hover:bg-zinc-900">👻 Horror</button>
+             <button onclick="navigateTo('fantasy'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-zinc-300 hover:bg-zinc-900">🧙 Fantasy</button>
+             <button onclick="navigateTo('thriller'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-zinc-300 hover:bg-zinc-900">🔪 Thriller</button>
+             <button onclick="navigateTo('search'); toggleMobileMenu();" class="focusable block w-full text-left px-3 py-2.5 rounded-lg text-zinc-300 hover:bg-zinc-900">🔍 Pencarian</button>
+             <div class="pt-3 mt-2 border-t border-zinc-800">
+                 <label for="mobile-year-filter" class="block text-xs text-zinc-500 mb-1.5">Filter Tahun</label>
+                 <select id="mobile-year-filter" onchange="const el=document.getElementById('year-filter'); if(el){el.value=this.value;} applyFilters(); toggleMobileMenu();" class="focusable w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 text-xs text-zinc-300">
+                     <option value="">Semua Tahun</option>
+                     <option value="2026">2026</option>
+                     <option value="2025">2025</option>
+                     <option value="2024">2024</option>
+                     <option value="2023">2023</option>
+                     <option value="2022">2022</option>
+                 </select>
+             </div>
+         </div>
+     <!-- Bottom Navigation Mobile -->
+     <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 backdrop-blur-lg border-t border-zinc-800 flex items-center justify-around py-2 px-1 text-[10px] sm:text-[11px] font-medium" aria-label="Navigasi Seluler">
+         <button onclick="navigateTo('home')" id="mob-nav-home" class="focusable flex flex-col items-center gap-0.5 sm:gap-1 text-brand-500 p-1">
+             <span class="text-lg sm:text-xl">🏠</span><span>Beranda</span>
+         </button>
+         <button onclick="navigateTo('action')" id="mob-nav-action" class="focusable flex flex-col items-center gap-0.5 sm:gap-1 text-zinc-400 p-1">
+             <span class="text-lg sm:text-xl">💥</span><span>Action</span>
+         </button>
+         <button onclick="navigateTo('horror')" id="mob-nav-horror" class="focusable flex flex-col items-center gap-0.5 sm:gap-1 text-zinc-400 p-1">
+             <span class="text-lg sm:text-xl">👻</span><span>Horror</span>
+         </button>
+         <button onclick="navigateTo('thriller')" id="mob-nav-thriller" class="focusable flex flex-col items-center gap-0.5 sm:gap-1 text-zinc-400 p-1 relative">
+             <span class="text-lg sm:text-xl">🔪</span><span>Thriller</span>
+         </button>
+         <button onclick="navigateTo('search')" id="mob-nav-search" class="focusable flex flex-col items-center gap-0.5 sm:gap-1 text-zinc-400 p-1">
+             <span class="text-lg sm:text-xl">🔍</span><span>Cari</span>
+         </button>
+     </nav>
+     <!-- ==================== MAIN CONTENT ==================== -->
+     <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6 sm:space-y-10" id="main-content">
+
+         <!-- Hero Section -->
+         <article id="hero-section" class="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-zinc-900 min-h-[320px] sm:min-h-[420px] lg:min-h-[460px] border border-zinc-800/80 shadow-2xl flex items-end">
+             <div id="hero-backdrop" class="absolute inset-0 bg-cover bg-center transition-all duration-700 filter brightness-90"></div>
+             <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
+
+             <div class="relative z-10 p-4 sm:p-8 lg:p-10 max-w-3xl space-y-2 sm:space-y-4">
+                 <div id="hero-badges" class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                     <span class="bg-brand-500 text-white font-extrabold text-[9px] sm:text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md tracking-wider uppercase">HIGHLIGHT</span>
+                     <span id="hero-rating" class="bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold text-[10px] sm:text-xs px-2 py-0.5 rounded">★ 8.8</span>
+                     <span id="hero-year" class="bg-zinc-800/80 text-zinc-300 text-[10px] sm:text-xs px-2 py-0.5 rounded">2026</span>
+                     <span id="hero-type" class="bg-zinc-800/80 text-zinc-300 text-[10px] sm:text-xs px-2 py-0.5 rounded capitalize">Movie</span>
+                 </div>
+                 <h1 id="hero-title" class="text-xl sm:text-3xl lg:text-5xl font-extrabold text-white leading-tight drop-shadow-md">Memuat Highlight Film...</h1>
+                 <p id="hero-overview" class="text-[11px] sm:text-sm text-zinc-300 line-clamp-2 sm:line-clamp-3 leading-relaxed max-w-2xl">Nikmati pemutaran film terbaru dengan kualitas jernih dan dukungan multi-server cepat dari LayarTancap 21+++.</p>
+                 <div class="pt-1 sm:pt-2 flex flex-wrap items-center gap-2 sm:gap-3">
+                     <button id="hero-play-btn" onclick="openHeroPlayer()" class="focusable bg-brand-500 hover:bg-brand-600 text-white font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl shadow-lg shadow-brand-500/30 flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all text-xs sm:text-sm">
+                         <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                         <span>Tonton Sekarang</span>
+                     </button>
+                     <button id="hero-fav-btn" onclick="toggleHeroFavorite()" class="focusable bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 font-semibold px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl border border-zinc-700 flex items-center gap-1.5 sm:gap-2 transition-all text-xs sm:text-sm">
+                         <span id="hero-fav-icon">⭐</span>
+                         <span id="hero-fav-text">Simpan</span>
+                     </button>
+                 </div>
+             </div>
+             <div class="absolute right-2 sm:right-4 bottom-2 sm:bottom-4 z-20 flex items-center gap-1.5 sm:gap-2">
+                 <button onclick="prevHero()" class="focusable p-2 sm:p-2.5 rounded-full bg-zinc-950/80 text-zinc-300 hover:text-white hover:bg-brand-500 transition-colors text-xs sm:text-sm" aria-label="Film Sebelumnya">◀</button>
+                 <button onclick="nextHero()" class="focusable p-2 sm:p-2.5 rounded-full bg-zinc-950/80 text-zinc-300 hover:text-white hover:bg-brand-500 transition-colors text-xs sm:text-sm" aria-label="Film Selanjutnya">▶</button>
+             </div>
+         </article>
+         <!-- Search Results Section -->
+         <section id="search-section" class="hidden space-y-3 sm:space-y-4">
+             <div class="rounded-2xl bg-zinc-900/70 border border-zinc-800 p-3 sm:p-4">
+                 <div class="relative">
+                     <input type="text" id="search-page-input" oninput="handleSearchPageInput(event)" onkeydown="if(event.key==='Enter'){executeSearch(this.value.trim(), true)}" placeholder="Cari judul film atau series..." class="focusable w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-10 pr-12 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-brand-500">
+                     <span class="absolute left-3 top-3 text-zinc-500">🔍</span>
+                     <button onclick="clearSearch()" class="absolute right-3 top-2.5 text-zinc-500 hover:text-white p-1" aria-label="Hapus pencarian">✕</button>
+                 </div>
+             </div>
+             <div class="flex items-center justify-between border-b border-zinc-800 pb-2 sm:pb-3">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2">
+                     <span class="text-brand-500">🔍</span> Hasil Pencarian: <span id="search-query-text" class="text-brand-500">""</span>
+                 </h2>
+                 <span id="search-count" class="text-[10px] sm:text-xs text-zinc-400">0 Film Ditemukan</span>
+             </div>
+             <div id="search-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+         </section>
+         <!-- Genre Page Section -->
+         <section id="genre-section" class="hidden space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between border-b border-zinc-800 pb-2 sm:pb-3">
+                 <h2 id="genre-page-title" class="text-base sm:text-2xl font-bold text-white flex items-center gap-2"><span class="text-brand-500">🎬</span> Katalog Genre</h2>
+                 <span id="genre-page-count" class="text-xs text-zinc-500"></span>
+             </div>
+             <div id="genre-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+         </section>
+         <!-- Trending Section -->
+         <section id="trending-section" class="space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">🔥</span> Trending Mingguan</h2>
+                 <div class="flex items-center gap-1 sm:gap-1.5">
+                     <button onclick="scrollCarousel('trending-carousel', -300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kiri">◀</button>
+                     <button onclick="scrollCarousel('trending-carousel', 300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kanan">▶</button>
+                 </div>
+             </div>
+             <div id="trending-carousel" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 sm:py-2 scroll-smooth"></div>
+         </section>
+         <!-- Movies Section -->
+         <section id="movies-section" class="space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">🎬</span> Film Bioskop Terbaru</h2>
+                 <div class="flex items-center gap-1 sm:gap-1.5">
+                     <button onclick="scrollCarousel('movies-carousel', -300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kiri">◀</button>
+                     <button onclick="scrollCarousel('movies-carousel', 300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kanan">▶</button>
+                 </div>
+             </div>
+             <div id="movies-carousel" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 sm:py-2 scroll-smooth"></div>
+         </section>
+         <!-- TV Series Section -->
+         <section id="series-section" class="space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">📺</span> Series Barat & Acara TV</h2>
+                 <div class="flex items-center gap-1 sm:gap-1.5">
+                     <button onclick="scrollCarousel('series-carousel', -300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kiri">◀</button>
+                     <button onclick="scrollCarousel('series-carousel', 300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kanan">▶</button>
+                 </div>
+             </div>
+             <div id="series-carousel" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 sm:py-2 scroll-smooth"></div>
+         </section>
+         <!-- Thriller Section -->
+         <section id="thriller-section" class="space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">🔪</span> Thriller & Misteri</h2>
+                 <div class="flex items-center gap-1 sm:gap-1.5">
+                     <button onclick="scrollCarousel('thriller-carousel', -300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kiri">◀</button>
+                     <button onclick="scrollCarousel('thriller-carousel', 300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kanan">▶</button>
+                 </div>
+             </div>
+             <div id="thriller-carousel" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 sm:py-2 scroll-smooth"></div>
+         </section>
+         <!-- Korea Series Section -->
+         <section id="korea-series-section" class="space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">🇰🇷</span> Series Korea</h2>
+                 <div class="flex items-center gap-1 sm:gap-1.5">
+                     <button onclick="scrollCarousel('korea-series-carousel', -300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kiri">◀</button>
+                     <button onclick="scrollCarousel('korea-series-carousel', 300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kanan">▶</button>
+                 </div>
+             </div>
+             <div id="korea-series-carousel" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 sm:py-2 scroll-smooth"></div>
+         </section>
+         <!-- India Series Section -->
+         <section id="india-series-section" class="space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">🇮🇳</span> Series India</h2>
+                 <div class="flex items-center gap-1 sm:gap-1.5">
+                     <button onclick="scrollCarousel('india-series-carousel', -300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kiri">◀</button>
+                     <button onclick="scrollCarousel('india-series-carousel', 300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kanan">▶</button>
+                 </div>
+             </div>
+             <div id="india-series-carousel" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 sm:py-2 scroll-smooth"></div>
+         </section>
+         <!-- Asia Movies Section -->
+         <section id="asia-movies-section" class="space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">🌏</span> Film Asia (Korea, Jepang, China, India)</h2>
+                 <div class="flex items-center gap-1 sm:gap-1.5">
+                     <button onclick="scrollCarousel('asia-movies-carousel', -300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kiri">◀</button>
+                     <button onclick="scrollCarousel('asia-movies-carousel', 300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kanan">▶</button>
+                 </div>
+             </div>
+             <div id="asia-movies-carousel" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 sm:py-2 scroll-smooth"></div>
+         </section>
+         <!-- Indonesia Movies Section -->
+         <section id="indonesia-movies-section" class="space-y-3 sm:space-y-4">
+             <div class="flex items-center justify-between">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">🇮🇩</span> Film Indonesia</h2>
+                 <div class="flex items-center gap-1 sm:gap-1.5">
+                     <button onclick="scrollCarousel('indonesia-movies-carousel', -300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kiri">◀</button>
+                     <button onclick="scrollCarousel('indonesia-movies-carousel', 300)" class="focusable p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-brand-500 transition-all text-[10px] sm:text-xs font-bold" aria-label="Scroll Kanan">▶</button>
+                 </div>
+             </div>
+             <div id="indonesia-movies-carousel" class="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 sm:py-2 scroll-smooth"></div>
+         </section>
+         <!-- Watchlist Section -->
+         <section id="watchlist-section" class="hidden space-y-3 sm:space-y-4">
+             <div class="border-b border-zinc-800 pb-2 sm:pb-3">
+                 <h2 class="text-base sm:text-xl font-bold text-white flex items-center gap-1.5 sm:gap-2"><span class="text-brand-500">⭐</span> Daftar Film Favorit Saya</h2>
+             </div>
+             <div id="watchlist-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+         </section>
+         <!-- ======== DETAIL PAGE (Player) ======== -->
+         <section id="detail-section" class="hidden space-y-4 sm:space-y-6">
+             <div class="flex items-center justify-between gap-2 flex-wrap">
+                 <button onclick="closeDetailPage()" class="focusable flex items-center gap-2 text-sm sm:text-base text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 transition-all">
+                     <span>←</span> Kembali
+                 </button>
+                 <div class="flex items-center gap-2">
+                     <span id="detail-type-badge" class="bg-brand-500 text-white font-bold text-[10px] sm:text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 rounded">MOVIE</span>
+                     <h2 id="detail-title" class="text-lg sm:text-2xl font-extrabold text-white truncate max-w-[200px] sm:max-w-md">Judul</h2>
+                 </div>
+                 <button onclick="toggleDetailFavorite()" class="focusable text-xs sm:text-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-3 py-2 rounded-xl border border-zinc-700">☆ Simpan</button>
+             </div>
+             <!-- Video Player -->
+             <div class="relative w-full aspect-video bg-zinc-950 rounded-xl sm:rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
+                 <iframe id="video-iframe" class="w-full h-full border-0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+             </div>
+             <!-- Server & Action Buttons -->
+             <div class="flex flex-wrap items-center justify-between gap-2 sm:gap-4 bg-zinc-900/80 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-zinc-800">
+                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                     <span class="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-wider">Server:</span>
+                     <button id="server-btn-1" onclick="switchServer(1)" class="focusable px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold bg-brand-500 text-white transition-all">Server 1</button>
+                     <button id="server-btn-2" onclick="switchServer(2)" class="focusable px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-all">Server 2</button>
+                     <button id="server-btn-3" onclick="switchServer(3)" class="focusable px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-all">Server 3</button>
+                 </div>
+                 <div class="flex items-center gap-1.5 sm:gap-2">
+                     <button onclick="playTrailer()" class="focusable text-[10px] sm:text-xs bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg flex items-center gap-1 sm:gap-1.5 shadow-md">
+                         <span>🎬</span> Trailer
+                     </button>
+                     <button onclick="openExternalPlayer()" class="focusable text-[10px] sm:text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1">
+                         <span>↗ Tab</span>
+                     </button>
+                     <button onclick="openShareModal()" class="focusable text-[10px] sm:text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg flex items-center gap-1">
+                         <span>🔗</span> Share
+                     </button>
+                 </div>
+             </div>
+             <!-- Episodes (TV) -->
+             <div id="episodes-container" class="hidden bg-zinc-900/80 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-zinc-800 space-y-2 sm:space-y-3">
+                 <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5 sm:gap-2"><span>📺</span> Pilih Episode:</h4>
+                 <div id="episodes-grid" class="flex flex-wrap gap-1.5 sm:gap-2 max-h-32 sm:max-h-40 overflow-y-auto"></div>
+             </div>
+             <!-- Info & Poster -->
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 bg-zinc-900/40 p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-zinc-800/60">
+                 <div class="space-y-2 sm:space-y-3">
+                     <img id="detail-poster" src="" alt="Poster Film" class="w-full h-48 sm:h-64 object-cover rounded-lg sm:rounded-xl shadow-md border border-zinc-800">
+                 </div>
+                 <div class="md:col-span-2 space-y-3 sm:space-y-4">
+                     <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                         <span id="detail-rating" class="text-amber-400 font-extrabold text-xs sm:text-sm bg-amber-500/10 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded border border-amber-500/20">★ 8.8</span>
+                         <span id="detail-year" class="text-zinc-300 text-xs sm:text-sm font-semibold">2026</span>
+                         <span id="detail-genres" class="text-brand-500 text-xs sm:text-sm font-semibold">Action, Drama</span>
+                     </div>
+                     <div>
+                         <h4 class="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Sinopsis Ringkas:</h4>
+                         <p id="detail-overview" class="text-xs sm:text-sm text-zinc-300 leading-relaxed max-h-28 sm:max-h-36 overflow-y-auto pr-2">Deskripsi film...</p>
+                     </div>
+                 </div>
+             </div>
+         </section>
+     </main>
+     <!-- ==================== REQUEST MODAL ==================== -->
+     <div id="request-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
+         <div class="bg-zinc-900 border border-zinc-800 rounded-xl sm:rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-2xl">
+             <div class="flex items-center justify-between border-b border-zinc-800 pb-2 sm:pb-3">
+                 <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-1.5 sm:gap-2"><span>📝</span> Request Film Baru</h3>
+                 <button onclick="closeRequestModal()" class="focusable text-zinc-400 hover:text-white p-1">✕</button>
+             </div>
+             <div>
+                 <label class="block text-[10px] sm:text-xs font-bold text-zinc-300 mb-1">Judul Film / Series:</label>
+                 <input type="text" id="req-title-input" placeholder="Contoh: Avatar Fire and Ash" class="focusable w-full bg-zinc-950 border border-zinc-800 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-500">
+             </div>
+             <div>
+                 <label class="block text-[10px] sm:text-xs font-bold text-zinc-300 mb-1">Pesan Tambahan:</label>
+                 <textarea id="req-note-input" rows="3" placeholder="Contoh: Mohon perbaiki server 1 error..." class="focusable w-full bg-zinc-950 border border-zinc-800 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-500"></textarea>
+             </div>
+             <button onclick="submitRequest()" class="focusable w-full bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs sm:text-sm py-2.5 sm:py-3 rounded-lg sm:rounded-xl shadow-md">Kirim Request</button>
+         </div>
+     </div>
+     <!-- ==================== SHARE MODAL ==================== -->
+     <div id="share-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
+         <div class="bg-zinc-900 border border-zinc-800 rounded-xl sm:rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-2xl">
+             <div class="flex items-center justify-between border-b border-zinc-800 pb-2 sm:pb-3">
+                 <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-1.5 sm:gap-2"><span>🔗</span> Bagikan Video</h3>
+                 <button onclick="closeShareModal()" class="focusable text-zinc-400 hover:text-white p-1">✕</button>
+             </div>
+             <div>
+                 <label class="block text-[10px] sm:text-xs font-bold text-zinc-300 mb-1">Link Tontonan:</label>
+                 <div class="flex gap-2">
+                     <input type="text" id="share-link-input" readonly class="focusable w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-xs sm:text-sm text-white focus:outline-none">
+                     <button onclick="copyShareLink()" class="focusable shrink-0 bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-bold px-3 py-2 rounded-lg">Salin</button>
+                 </div>
+             </div>
+             <div>
+                 <label class="block text-[10px] sm:text-xs font-bold text-zinc-300 mb-1">Kode Embed (iframe):</label>
+                 <div class="flex gap-2">
+                     <textarea id="share-embed-code" readonly rows="3" class="focusable w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-xs sm:text-sm text-white focus:outline-none"></textarea>
+                     <button onclick="copyEmbedCode()" class="focusable shrink-0 bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-bold px-3 py-2 rounded-lg">Salin</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div id="container-0ebe8e033d54f677c253b902dad75d61" class="w-full text-center py-3 sm:py-4 bg-zinc-950 border-t border-zinc-800"></div>
+     <script>
+         // ============================================
+         // GLOBAL ERROR HANDLERS
+         // ============================================
+         window.addEventListener('error', (e) => { e.preventDefault(); return true; }, true);
+         window.addEventListener('unhandledrejection', (e) => { e.preventDefault(); });
+         const DEFAULT_API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlOWE0MjVkOWE5NWIxOWNlZWNmNWY3NjM0OTFhMTZhMiIsIm5iZiI6MTc4NjcwODk3NS45NDMsInN1YiI6IjZhN2YwM2VmYWRhZTA1MzllZWI3YTUwMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tYWz-uha4q8nvwC1HTDd_KUgjGAdMFSPbOzZrkE3hoY";
+         const FALLBACK_MOVIES = [
+             { id: 939243, title: "Avatar: Fire and Ash", type: "movie", rating: "8.9", year: "2026", genre: "Sci-Fi, Adventure", overview: "Lanjutan epik petualangan di Pandora dengan visual memukau dan pertempuran klan baru.", poster_path: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" },
+             { id: 533535, title: "Deadpool & Wolverine", type: "movie", rating: "8.1", year: "2024", genre: "Action, Comedy", overview: "Duet kocak dan brutal antara Wade Wilson dan Logan menyelamatkan multiverse.", poster_path: "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg" },
+             { id: 693134, title: "Dune: Part Two", type: "movie", rating: "8.6", year: "2024", genre: "Sci-Fi, Adventure", overview: "Paul Atreides bersatu dengan Chani dan Suku Fremen dalam misi balas dendam.", poster_path: "https://image.tmdb.org/t/p/w500/1pdfifyNQrYMH7QCKV4T58I2Aky.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/1pdfifyNQrYMH7QCKV4T58I2Aky.jpg" },
+             { id: 1022789, title: "Inside Out 2", type: "movie", rating: "8.5", year: "2024", genre: "Animation, Comedy", overview: "Emosi baru muncul di benak Riley yang beranjak remaja: Kecemasan, Kebosanan, dan Iri.", poster_path: "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg" },
+             { id: 823464, title: "Godzilla x Kong: The New Empire", type: "movie", rating: "7.8", year: "2024", genre: "Action, Sci-Fi", overview: "Dua raksasa legendaris kembali bersatu menghadapi ancaman kolosal bawah tanah.", poster_path: "https://image.tmdb.org/t/p/w500/tMefBSflR6PGQLv7WvFPpKLZkyk.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/gmSwxymcDVGEcqn36H6tF2GkPvc.jpg" },
+             { id: 76341, title: "Mad Max: Fury Road", type: "movie", rating: "8.3", year: "2015", genre: "Action, Thriller", overview: "Aksi kejar-kejaran tanpa henti melintasi gurun pasca-apokaliptik.", poster_path: "https://image.tmdb.org/t/p/w500/hA2ple9q4qnwxp3hKVNhroipsir.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/hA2ple9q4qnwxp3hKVNhroipsir.jpg" }
+         ];
+         const FALLBACK_SERIES = [
+             { id: 94605, title: "Arcane", type: "tv", rating: "9.0", year: "2024", genre: "Animation, Sci-Fi", overview: "Kisah konflik dua saudari di kota kembar Piltover dan Zaun.", poster_path: "https://image.tmdb.org/t/p/w500/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg" },
+             { id: 1396, title: "Breaking Bad", type: "tv", rating: "9.2", year: "2008", genre: "Crime, Drama", overview: "Guru kimia SMA beralih menjadi produsen metamfetamin demi keluarganya.", poster_path: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" },
+             { id: 66732, title: "Stranger Things", type: "tv", rating: "8.7", year: "2022", genre: "Sci-Fi, Horror", overview: "Sekelompok anak-anak menghadapi misteri supranatural di Hawkins.", poster_path: "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" },
+             { id: 119051, title: "Wednesday", type: "tv", rating: "8.4", year: "2022", genre: "Fantasy, Mystery", overview: "Petualangan Wednesday Addams di Nevermore Academy mengungkap kasus misterius.", poster_path: "https://image.tmdb.org/t/p/w500/9PFonBhy4cQy7Jz20NpMygczOkv.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/9PFonBhy4cQy7Jz20NpMygczOkv.jpg" }
+         ];
+         // ============================================
+         // STATE & CACHE
+         // ============================================
+         const mediaCache = new Map();
+         [...FALLBACK_MOVIES, ...FALLBACK_SERIES].forEach(item => mediaCache.set(`${item.type}-${item.id}`, item));
+         const state = {
+             activeTab: 'home',
+             trendingData: [...FALLBACK_MOVIES, ...FALLBACK_SERIES],
+             moviesData: [...FALLBACK_MOVIES],
+             seriesData: [...FALLBACK_SERIES],
+             thrillerData: [...FALLBACK_MOVIES],
+             westernSeriesData: [...FALLBACK_SERIES],
+             koreaSeriesData: [...FALLBACK_SERIES],
+             indiaSeriesData: [...FALLBACK_SERIES],
+             asiaMoviesData: [...FALLBACK_MOVIES],
+             indonesiaMoviesData: [...FALLBACK_MOVIES],
+             genreData: [...FALLBACK_MOVIES, ...FALLBACK_SERIES],
+             activeGenreId: '',
+             activeGenreName: '',
+             heroItems: [...FALLBACK_MOVIES].slice(0, 5),
+             currentHeroIndex: 0,
+             heroTimer: null,
+             watchlist: [],
+             searchQuery: '',
+             currentMedia: null,
+             currentServer: 1,
+             currentSeason: 1,
+             currentEpisode: 1,
+             trailerKey: ''
+         };
+         try {
+             state.watchlist = JSON.parse(localStorage.getItem('lt21_watchlist') || '[]');
+         } catch(e) { state.watchlist = []; }
+         let tvFocusables = [];
+         let tvIndex = -1;
+         function getMediaKey(type, id) { return `${type}-${id}`; }
+         function slugify(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
+         async function tmdbFetch(endpoint) {
+             try {
+                 const url = `https://api.themoviedb.org/3${endpoint}`;
+                 const headers = { 'Accept': 'application/json', 'Authorization': `Bearer ${DEFAULT_API_KEY}` };
+                 const res = await fetch(url, { headers });
+                 if (!res.ok) throw new Error('Network response failed');
+                 return res;
+             } catch(err) {
+                 return { ok: false, json: async () => ({ results: [] }) };
+             }
+         }
+         function normalizeTMDBItem(item) {
+             try {
+                 if (!item) return null;
+                 const title = item.title || item.name || item.original_title || 'Tanpa Judul';
+                 const releaseDate = item.release_date || item.first_air_date || '2026';
+                 const year = releaseDate ? (releaseDate.split('-')[0] || '2026') : '2026';
+                 const mediaType = item.media_type || (item.title ? 'movie' : 'tv');
+                 const norm = {
+                     id: item.id || Math.floor(Math.random() * 100000),
+                     title,
+                     type: mediaType,
+                     rating: item.vote_average ? item.vote_average.toFixed(1) : '8.0',
+                     year,
+                     genre: item.genre_ids ? item.genre_ids.join(', ') : 'Bioskop',
+                     overview: item.overview || 'Tidak ada deskripsi tersedia.',
+                     poster_path: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://placehold.co/400x600/18181b/ff5c00?text=No+Poster',
+                     backdrop_path: item.backdrop_path ? `https://image.tmdb.org/t/p/w1280${item.backdrop_path}` : 'https://placehold.co/1200x600/18181b/ff5c00?text=No+Cover'
+                 };
+                 mediaCache.set(getMediaKey(norm.type, norm.id), norm);
+                 return norm;
+             } catch(e) { return null; }
+         }
+         // ========== FETCH DATA ==========
+         async function fetchTMDBCatalogs() {
+             try {
+                 const genreEl = document.getElementById('genre-filter');
+                 const yearEl = document.getElementById('year-filter');
+                 const genreId = genreEl ? genreEl.value : '';
+                 const yearVal = yearEl ? yearEl.value : '';
+                 let endpointAppend = '';
+                 if (genreId) endpointAppend += `&with_genres=${genreId}`;
+                 if (yearVal) endpointAppend += `&primary_release_year=${yearVal}&first_air_date_year=${yearVal}`;
+                 let fetchedAny = false;
+                 const resTrending = await tmdbFetch(`/trending/all/week?language=id-ID${endpointAppend}`);
+                 if (resTrending?.ok) {
+                     const data = await resTrending.json();
+                     if (data?.results?.length) {
+                         state.trendingData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                         state.heroItems = state.trendingData.slice(0, 5);
+                         fetchedAny = true;
+                     }
+                 }
+                 const resMovies = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc${endpointAppend}`);
+                 if (resMovies?.ok) {
+                     const data = await resMovies.json();
+                     if (data?.results?.length) {
+                         state.moviesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                         fetchedAny = true;
+                     }
+                 }
+                 const resTV = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc${endpointAppend}`);
+                 if (resTV?.ok) {
+                     const data = await resTV.json();
+                     if (data?.results?.length) {
+                         state.seriesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                         fetchedAny = true;
+                     }
+                 }
+                 const resThriller = await tmdbFetch(`/discover/movie?language=id-ID&with_genres=53&sort_by=popularity.desc${endpointAppend}`);
+                 if (resThriller?.ok) {
+                     const data = await resThriller.json();
+                     if (data?.results?.length) {
+                         state.thrillerData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                         fetchedAny = true;
+                     }
+                 }
+                 // Tambahan katalog berdasarkan negara/wilayah
+                 const resWesternSeries = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=US|GB|CA|AU`);
+                 if (resWesternSeries?.ok) {
+                     const data = await resWesternSeries.json();
+                     if (data?.results?.length) state.westernSeriesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                 }
+
+                 const resKoreaSeries = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=KR`);
+                 if (resKoreaSeries?.ok) {
+                     const data = await resKoreaSeries.json();
+                     if (data?.results?.length) state.koreaSeriesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                 }
+
+                 const resIndiaSeries = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc&with_origin_country=IN`);
+                 if (resIndiaSeries?.ok) {
+                     const data = await resIndiaSeries.json();
+                     if (data?.results?.length) state.indiaSeriesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                 }
+
+                 const resAsiaMovies = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc&with_origin_country=KR|JP|CN|IN`);
+                 if (resAsiaMovies?.ok) {
+                     const data = await resAsiaMovies.json();
+                     if (data?.results?.length) state.asiaMoviesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                 }
+
+                 const resIndonesiaMovies = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc&with_origin_country=ID`);
+                 if (resIndonesiaMovies?.ok) {
+                     const data = await resIndonesiaMovies.json();
+                     if (data?.results?.length) state.indonesiaMoviesData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                 }
+                 if (fetchedAny) setupHeroCarousel();
+                 renderAllSections();
+             } catch (err) {
+                 renderAllSections();
+             }
+         }
+         async function fetchGenreData() {
+             if (!state.activeGenreId) return;
+             const yearEl = document.getElementById('year-filter');
+             const yearVal = yearEl ? yearEl.value : '';
+             const mobileYear = document.getElementById('mobile-year-filter');
+             const effectiveYear = yearVal || (mobileYear ? mobileYear.value : '');
+             const yearMovie = effectiveYear ? `&primary_release_year=${effectiveYear}` : '';
+             const yearTv = effectiveYear ? `&first_air_date_year=${effectiveYear}` : '';
+             const movieRes = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc&with_genres=${state.activeGenreId}${yearMovie}`);
+             const tvRes = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc&with_genres=${state.activeGenreId}${yearTv}`);
+             let results = [];
+             if (movieRes?.ok) { const data = await movieRes.json(); results = results.concat((data.results || []).map(x => normalizeTMDBItem({...x, media_type:'movie'}))); }
+             if (tvRes?.ok) { const data = await tvRes.json(); results = results.concat((data.results || []).map(x => normalizeTMDBItem({...x, media_type:'tv'}))); }
+             results = results.filter(Boolean).sort((a,b) => Number(b.rating) - Number(a.rating));
+             state.genreData = results;
+             const grid = document.getElementById('genre-grid');
+             const count = document.getElementById('genre-page-count');
+             if (count) count.textContent = `${results.length} judul`;
+             if (grid) grid.innerHTML = results.length ? results.map(item => createCardHTML(item)).join('') : `<div class="col-span-full py-12 text-center text-zinc-500 text-sm">Tidak ada film/series untuk filter ini.</div>`;
+             setTimeout(updateTvFocusables, 200);
+         }
+         function applyFilters() { if (state.activeGenreId) fetchGenreData(); else fetchTMDBCatalogs(); showToast('Filter tahun diterapkan', '🔍'); }
+         function showToast(message, icon = 'ℹ️') {
+             const toast = document.getElementById('toast');
+             const iconEl = document.getElementById('toast-icon');
+             const msgEl = document.getElementById('toast-message');
+             if (!toast || !iconEl || !msgEl) return;
+             iconEl.textContent = icon;
+             msgEl.textContent = message;
+             toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+             toast.classList.add('translate-y-0', 'opacity-100');
+             setTimeout(() => {
+                 toast.classList.remove('translate-y-0', 'opacity-100');
+                 toast.classList.add('translate-y-[-100px]', 'opacity-0');
+             }, 3000);
+         }
+         function updateSeoMeta(item) {
+             document.title = item
+                 ? `Nonton ${item.title} (${item.year}) Subtitle Indonesia - LayarTancap 21+++`
+                 : 'LayarTancap 21+++ - Nonton Film & TV Series Subtitle Indonesia Gratis';
+         }
+         function updateTvFocusables() { tvFocusables = Array.from(document.querySelectorAll('.focusable:not(.hidden)')); }
+         function navigateTv(direction) {
+             updateTvFocusables();
+             if (tvFocusables.length === 0) return;
+             if (tvIndex < 0) tvIndex = 0;
+             else {
+                 tvFocusables[tvIndex]?.classList.remove('tv-focused');
+                 if (direction === 'right' || direction === 'down') tvIndex = (tvIndex + 1) % tvFocusables.length;
+                 else if (direction === 'left' || direction === 'up') tvIndex = (tvIndex - 1 + tvFocusables.length) % tvFocusables.length;
+             }
+             const current = tvFocusables[tvIndex];
+             if (current) {
+                 current.classList.add('tv-focused');
+                 current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+             }
+         }
+         function scrollCarousel(elementId, distance) {
+             const container = document.getElementById(elementId);
+             if (container) container.scrollBy({ left: distance, behavior: 'smooth' });
+         }
+         function renderAllSections() {
+             renderCarousel('trending-carousel', state.trendingData);
+             renderCarousel('movies-carousel', state.moviesData);
+             renderCarousel('series-carousel', state.seriesData);
+             renderCarousel('thriller-carousel', state.thrillerData);
+             renderCarousel('korea-series-carousel', state.koreaSeriesData);
+             renderCarousel('india-series-carousel', state.indiaSeriesData);
+             renderCarousel('asia-movies-carousel', state.asiaMoviesData);
+             renderCarousel('indonesia-movies-carousel', state.indonesiaMoviesData);
+             if (state.activeTab === 'watchlist') renderWatchlistGrid();
+             setTimeout(updateTvFocusables, 200);
+         }
+         function renderCarousel(elementId, items) {
+             const container = document.getElementById(elementId);
+             if (!container) return;
+             if (!items || items.length === 0) {
+                 container.innerHTML = `<div class="p-4 text-xs text-zinc-500">Memuat katalog film...</div>`;
+                 return;
+             }
+             container.innerHTML = items.map(item => createCardHTML(item)).join('');
+         }
+         function createCardHTML(item) {
+             const isFav = isWatchlisted(item.id);
+             const key = getMediaKey(item.type, item.id);
+             mediaCache.set(key, item);
+             const slug = slugify(item.title);
+             return `
+                 <article class="focusable poster-card shrink-0 w-24 sm:w-36 md:w-44 bg-zinc-900 rounded-lg sm:rounded-xl overflow-hidden border border-zinc-800/80 group cursor-pointer relative"
+                          tabindex="0" data-media-key="${key}" onclick="navigateToDetail('${key}')">
+                     <div class="relative aspect-[2/3] overflow-hidden bg-zinc-950">
+                         <img src="${item.poster_path}" alt="Poster ${item.title}" loading="lazy"
+                              onerror="this.src='https://placehold.co/400x600/18181b/ff5c00?text=Gambar+N/A'"
+                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                         <div class="absolute top-1 sm:top-2 left-1 sm:left-2 bg-black/70 backdrop-blur-md text-amber-400 font-extrabold text-[8px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded border border-amber-500/20">★ ${item.rating}</div>
+                         <div class="absolute top-1 sm:top-2 right-1 sm:right-2 z-10">
+                             <button onclick="event.stopPropagation(); toggleFavoriteFromKey('${key}')"
+                                     class="focusable p-1 sm:p-1.5 rounded-full bg-black/70 hover:bg-brand-500 text-white transition-all text-[8px] sm:text-xs"
+                                     aria-label="Simpan Favorit">${isFav ? '⭐' : '☆'}</button>
+                         </div>
+                         <div class="absolute inset-0 bg-brand-600/40 backdrop-blur-[2px] play-overlay flex flex-col items-center justify-center p-1 sm:p-3 text-center">
+                             <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-brand-500 text-white flex items-center justify-center shadow-xl shadow-brand-500/50 mb-1 sm:mb-2 transform group-hover:scale-110 transition-transform">
+                                 <svg class="w-4 h-4 sm:w-6 sm:h-6 fill-current translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                             </div>
+                             <span class="text-white text-[8px] sm:text-xs font-black tracking-wide drop-shadow">TONTON</span>
+                         </div>
+                     </div>
+                     <div class="p-2 sm:p-3 space-y-0.5 sm:space-y-1">
+                         <h3 class="text-[10px] sm:text-sm font-bold text-white truncate group-hover:text-brand-500 transition-colors">${item.title}</h3>
+                         <div class="flex items-center justify-between text-[8px] sm:text-[10px] text-zinc-400">
+                             <span>${item.year}</span>
+                             <span class="uppercase border border-zinc-700 px-0.5 sm:px-1 rounded text-[7px] sm:text-[9px]">${item.type === 'tv' ? 'Series' : 'HD'}</span>
+                         </div>
+                     </div>
+                 </article>
+             `;
+         }
+         function toggleFavoriteFromKey(key) {
+             const item = mediaCache.get(key);
+             if (item) toggleWatchlistDirect(item);
+         }
+         function navigateToDetail(key) {
+             const item = mediaCache.get(key);
+             if (!item) return;
+             const slug = slugify(item.title);
+             const path = `/${item.type}/${item.id}/${slug}`;
+             history.pushState({ mediaId: item.id, type: item.type }, '', path);
+             openDetailPage(item);
+         }
+         function openHeroPlayer() {
+             const item = state.heroItems[state.currentHeroIndex];
+             if (item) navigateToDetail(getMediaKey(item.type, item.id));
+         }
+         function toggleHeroFavorite() {
+             const item = state.heroItems[state.currentHeroIndex];
+             if (item) {
+                 toggleWatchlistDirect(item);
+                 updateHeroDisplay();
+             }
+         }
+         function isWatchlisted(id) { return state.watchlist.some(x => x.id === id); }
+         function toggleWatchlistDirect(item) {
+             const idx = state.watchlist.findIndex(x => x.id === item.id);
+             if (idx > -1) {
+                 state.watchlist.splice(idx, 1);
+                 showToast(`"${item.title}" dihapus dari favorit`, '🗑️');
+             } else {
+                 state.watchlist.push(item);
+                 showToast(`"${item.title}" ditambahkan ke favorit!`, '⭐');
+             }
+             localStorage.setItem('lt21_watchlist', JSON.stringify(state.watchlist));
+             updateWatchlistBadge();
+             renderAllSections();
+             // Jika sedang di halaman detail, update tombol favorit
+             if (state.currentMedia && state.currentMedia.id === item.id) {
+                 updateDetailFavoriteButton();
+             }
+         }
+         function updateWatchlistBadge() {
+             const badge = document.getElementById('watchlist-count-badge');
+             if (badge) badge.textContent = state.watchlist.length;
+         }
+         function renderWatchlistGrid() {
+             const grid = document.getElementById('watchlist-grid');
+             if (!grid) return;
+             if (state.watchlist.length === 0) {
+                 grid.innerHTML = `
+                     <div class="col-span-full py-12 text-center space-y-3">
+                         <span class="text-4xl">⭐</span>
+                         <p class="text-zinc-400 text-sm">Belum ada film di daftar favorit Kamu.</p>
+                         <button onclick="navigateTo('home')" class="focusable text-xs bg-brand-500 text-white font-bold px-4 py-2 rounded-lg">Cari Film Sekarang</button>
+                     </div>
+                 `;
+                 return;
+             }
+             grid.innerHTML = state.watchlist.map(item => createCardHTML(item)).join('');
+         }
+         // ========== DETAIL PAGE FUNCTIONS ==========
+         async function openDetailPage(item) {
+             state.currentMedia = item;
+             state.currentServer = 1;
+             state.currentSeason = 1;
+             state.currentEpisode = 1;
+             state.trailerKey = '';
+             updateSeoMeta(item);
+             document.getElementById('detail-title').textContent = item.title;
+             document.getElementById('detail-type-badge').textContent = item.type === 'tv' ? 'TV SERIES' : 'MOVIE';
+             document.getElementById('detail-rating').textContent = `★ ${item.rating}`;
+             document.getElementById('detail-year').textContent = item.year;
+             document.getElementById('detail-genres').textContent = item.genre;
+             document.getElementById('detail-overview').textContent = item.overview;
+             document.getElementById('detail-poster').src = item.poster_path;
+             updateDetailFavoriteButton();
+             const epContainer = document.getElementById('episodes-container');
+             const epGrid = document.getElementById('episodes-grid');
+             if (item.type === 'tv') {
+                 epContainer.classList.remove('hidden');
+                 let epHTML = '';
+                 for (let i = 1; i <= 16; i++) {
+                     epHTML += `<button onclick="switchEpisode(${i})" id="ep-btn-${i}" class="focusable px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold ${i === 1 ? 'bg-brand-500 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'}">Eps ${i}</button>`;
+                 }
+                 epGrid.innerHTML = epHTML;
+             } else {
+                 epContainer.classList.add('hidden');
+             }
+             // Sembunyikan SEMUA elemen langsung di #main-content kecuali #detail-section
+             document.querySelectorAll('#main-content > *:not(#detail-section)').forEach(s => s.classList.add('hidden'));
+             document.getElementById('detail-section').classList.remove('hidden');
+             switchServer(1); // reset visual
+             updateIframeSource();
+             // Fetch trailer
+             let trailerRes = await tmdbFetch(`/${item.type}/${item.id}/videos?language=id-ID`);
+             if (trailerRes?.ok) {
+                 let data = await trailerRes.json();
+                 let officialTrailer = data.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube') || data.results?.find(v => v.site === 'YouTube');
+                 if (!officialTrailer) {
+                     trailerRes = await tmdbFetch(`/${item.type}/${item.id}/videos?language=en-US`);
+                     if (trailerRes?.ok) {
+                         data = await trailerRes.json();
+                         officialTrailer = data.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube') || data.results?.find(v => v.site === 'YouTube');
+                     }
+                 }
+                 if (officialTrailer) state.trailerKey = officialTrailer.key;
+             }
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+             setTimeout(updateTvFocusables, 200);
+         }
+         function closeDetailPage() {
+             document.getElementById('detail-section').classList.add('hidden');
+             const sections = {
+                 home: ['hero-section', 'trending-section', 'movies-section', 'series-section', 'thriller-section', 'korea-series-section', 'india-series-section', 'asia-movies-section', 'indonesia-movies-section'],
+                 movies: ['movies-section'],
+                 tv: ['series-section'],
+                 watchlist: ['watchlist-section']
+             };
+             const toShow = sections[state.activeTab] || sections.home;
+             // Sembunyikan semua elemen langsung di #main-content, lalu tampilkan yang sesuai
+             document.querySelectorAll('#main-content > *').forEach(s => s.classList.add('hidden'));
+             toShow.forEach(id => {
+                 const sec = document.getElementById(id);
+                 if (sec) sec.classList.remove('hidden');
+             });
+             const path = state.activeTab === 'home' ? '/' : `/${state.activeTab}`;
+             history.pushState({ tab: state.activeTab }, '', path);
+             updateSeoMeta(null);
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+         }
+         function updateDetailFavoriteButton() {
+             const btn = document.querySelector('#detail-section button[onclick="toggleDetailFavorite()"]');
+             if (btn && state.currentMedia) {
+                 const isFav = isWatchlisted(state.currentMedia.id);
+                 btn.innerHTML = isFav ? '⭐ Tersimpan' : '☆ Simpan';
+             }
+         }
+         function toggleDetailFavorite() {
+             if (state.currentMedia) {
+                 toggleWatchlistDirect(state.currentMedia);
+             }
+         }
+         function switchServer(serverNum) {
+             state.currentServer = serverNum;
+             for (let i = 1; i <= 3; i++) {
+                 const btn = document.getElementById(`server-btn-${i}`);
+                 if (btn) {
+                     btn.className = i === serverNum
+                         ? "focusable px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold bg-brand-500 text-white transition-all"
+                         : "focusable px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-all";
+                 }
+             }
+             updateIframeSource();
+         }
+         function switchEpisode(epNum) {
+             state.currentEpisode = epNum;
+             const container = document.getElementById('episodes-grid');
+             if (!container) return;
+             const buttons = container.querySelectorAll('button');
+             buttons.forEach((btn, idx) => {
+                 btn.className = idx + 1 === epNum
+                     ? "focusable px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold bg-brand-500 text-white"
+                     : "focusable px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium bg-zinc-800 text-zinc-300 hover:bg-zinc-700";
+             });
+             updateIframeSource();
+         }
+         function updateIframeSource() {
+             const item = state.currentMedia;
+             if (!item) return;
+             const iframe = document.getElementById('video-iframe');
+             if (!iframe) return;
+             let url = '';
+             const isTv = item.type === 'tv';
+             const id = item.id;
+             if (state.currentServer === 1) {
+                 url = isTv ? `https://vidsrc.to/embed/tv/${id}/${state.currentSeason}/${state.currentEpisode}`
+                            : `https://vidsrc.to/embed/movie/${id}`;
+             } else if (state.currentServer === 2) {
+                 url = isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/${state.currentSeason}/${state.currentEpisode}`
+                            : `https://vidsrc.cc/v2/embed/movie/${id}`;
+             } else {
+                 url = isTv ? `https://vidsrc.me/embed/tv?tmdb=${id}&season=${state.currentSeason}&episode=${state.currentEpisode}`
+                            : `https://vidsrc.me/embed/movie?tmdb=${id}`;
+             }
+             iframe.src = url;
+         }
+         function playTrailer() {
+             const iframe = document.getElementById('video-iframe');
+             if (!iframe) return;
+             if (state.trailerKey) {
+                 iframe.src = `https://www.youtube.com/embed/${state.trailerKey}?autoplay=1`;
+                 showToast('Memutar Trailer Resmi YouTube', '🎬');
+             } else {
+                 showToast('Maaf, trailer resmi tidak tersedia untuk film ini', '⚠️');
+             }
+         }
+         function openExternalPlayer() {
+             const iframe = document.getElementById('video-iframe');
+             if (iframe && iframe.src) window.open(iframe.src, '_blank');
+         }
+         // ========== SHARE FUNCTIONS ==========
+         function getCurrentEmbedUrl() {
+             const item = state.currentMedia;
+             if (!item) return '';
+             const isTv = item.type === 'tv';
+             const id = item.id;
+             if (state.currentServer === 1) {
+                 return isTv ? `https://vidsrc.to/embed/tv/${id}/${state.currentSeason}/${state.currentEpisode}` : `https://vidsrc.to/embed/movie/${id}`;
+             } else if (state.currentServer === 2) {
+                 return isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/${state.currentSeason}/${state.currentEpisode}` : `https://vidsrc.cc/v2/embed/movie/${id}`;
+             } else {
+                 return isTv ? `https://vidsrc.me/embed/tv?tmdb=${id}&season=${state.currentSeason}&episode=${state.currentEpisode}` : `https://vidsrc.me/embed/movie?tmdb=${id}`;
+             }
+         }
+         function openShareModal() {
+             if (!state.currentMedia) return;
+             const embedUrl = getCurrentEmbedUrl();
+             const pageUrl = window.location.href;
+             document.getElementById('share-link-input').value = pageUrl;
+             document.getElementById('share-embed-code').value = `<iframe src="${embedUrl}" width="640" height="360" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+             document.getElementById('share-modal').classList.remove('hidden');
+         }
+         function closeShareModal() {
+             document.getElementById('share-modal').classList.add('hidden');
+         }
+         function copyShareLink() {
+             const input = document.getElementById('share-link-input');
+             copyToClipboard(input.value, 'Link berhasil disalin!');
+         }
+         function copyEmbedCode() {
+             const textarea = document.getElementById('share-embed-code');
+             copyToClipboard(textarea.value, 'Kode embed berhasil disalin!');
+         }
+         function copyToClipboard(text, successMessage) {
+             if (navigator.clipboard && navigator.clipboard.writeText) {
+                 navigator.clipboard.writeText(text).then(() => {
+                     showToast(successMessage, '✅');
+                 }).catch(() => {
+                     fallbackCopy(text, successMessage);
+                 });
+             } else {
+                 fallbackCopy(text, successMessage);
+             }
+         }
+         function fallbackCopy(text, successMessage) {
+             const temp = document.createElement('textarea');
+             temp.value = text;
+             document.body.appendChild(temp);
+             temp.select();
+             document.execCommand('copy');
+             document.body.removeChild(temp);
+             showToast(successMessage, '✅');
+         }
+         // ========== SEARCH & ROUTING ==========
+         let searchDebounce = null;
+         function openSearchPage(query = '') {
+             const q = String(query || document.getElementById('search-input')?.value || '').trim();
+             const url = q ? `/search?q=${encodeURIComponent(q)}` : '/search';
+             history.pushState({ tab:'search', query:q }, '', url);
+             switchTab('search');
+             const input = document.getElementById('search-input');
+             const mobileInput = document.getElementById('mobile-search-input');
+             if (input) input.value = q;
+             if (mobileInput) mobileInput.value = q;
+             if (q) executeSearch(q, false);
+             else { const grid=document.getElementById('search-grid'); if(grid) grid.innerHTML='<div class="col-span-full py-12 text-center text-zinc-500 text-sm">Ketik judul film atau series untuk mencari.</div>'; }
+         }
+         function handleSearchInput(e) {
+             clearTimeout(searchDebounce);
+             const query = e.target.value.trim();
+             const clearBtn = document.getElementById('search-clear-btn');
+             if (clearBtn) clearBtn.classList.toggle('hidden', !query);
+             if (!query) { history.replaceState({tab:'search'}, '', '/search'); return; }
+             history.replaceState({tab:'search', query}, '', `/search?q=${encodeURIComponent(query)}`);
+             switchTab('search');
+             searchDebounce = setTimeout(() => executeSearch(query, false), 400);
+         }
+         function handleMobileSearchInput(e) {
+             const query = e.target.value.trim();
+             const desktop = document.getElementById('search-input');
+             if (desktop) desktop.value = query;
+             handleSearchInput({target:{value:query}});
+         }
+         function toggleMobileSearch() {
+             const bar = document.getElementById('mobile-search-bar');
+             if (bar) { bar.classList.toggle('hidden'); if (!bar.classList.contains('hidden')) document.getElementById('mobile-search-input').focus(); }
+         }
+         function clearSearch() {
+             document.getElementById('search-input').value = '';
+             document.getElementById('mobile-search-input').value = '';
+             document.getElementById('search-clear-btn').classList.add('hidden');
+             history.pushState({tab:'search'}, '', '/search');
+             switchTab('search');
+             const grid=document.getElementById('search-grid'); if(grid) grid.innerHTML='<div class="col-span-full py-12 text-center text-zinc-500 text-sm">Ketik judul film atau series untuk mencari.</div>';
+         }
+         function handleSearchPageInput(e) {
+             const query = e.target.value.trim();
+             clearTimeout(searchDebounce);
+             if (!query) {
+                 history.replaceState({tab:'search'}, '', '/search');
+                 const grid=document.getElementById('search-grid');
+                 if(grid) grid.innerHTML='<div class="col-span-full py-12 text-center text-zinc-500 text-sm">Ketik judul film atau series untuk mencari.</div>';
+                 document.getElementById('search-query-text').textContent='""';
+                 document.getElementById('search-count').textContent='0 Film Ditemukan';
+                 return;
+             }
+             history.replaceState({tab:'search', query}, '', `/search?q=${encodeURIComponent(query)}`);
+             searchDebounce = setTimeout(() => executeSearch(query, false), 400);
+         }
+         async function executeSearch(query, updateHistory = true) {
+             state.searchQuery = query;
+             const searchPageInput = document.getElementById('search-page-input');
+             if (searchPageInput) searchPageInput.value = query;
+             document.getElementById('search-query-text').textContent = `"${query}"`;
+             let tmdbMatches = [];
+             const res = await tmdbFetch(`/search/multi?language=id-ID&query=${encodeURIComponent(query)}`);
+             if (res?.ok) {
+                 const data = await res.json();
+                 if (data?.results) {
+                     tmdbMatches = data.results
+                         .filter(x => x.media_type === 'movie' || x.media_type === 'tv')
+                         .map(normalizeTMDBItem)
+                         .filter(Boolean);
+                 }
+             }
+             if (tmdbMatches.length === 0) {
+                 const qLower = query.toLowerCase();
+                 tmdbMatches = [...FALLBACK_MOVIES, ...FALLBACK_SERIES].filter(item =>
+                     item.title.toLowerCase().includes(qLower)
+                 );
+             }
+             const searchGrid = document.getElementById('search-grid');
+             const searchCount = document.getElementById('search-count');
+             searchCount.textContent = `${tmdbMatches.length} Film Ditemukan`;
+             if (tmdbMatches.length === 0) {
+                 searchGrid.innerHTML = `<div class="col-span-full py-8 text-center text-zinc-500 text-sm">Tidak ditemukan hasil untuk "${query}".</div>`;
+             } else {
+                 searchGrid.innerHTML = tmdbMatches.map(item => createCardHTML(item)).join('');
+             }
+             document.getElementById('search-section').classList.remove('hidden');
+             setTimeout(updateTvFocusables, 200);
+         }
+         const GENRE_ROUTES = {
+             action: {id:28, name:'Action'},
+             adventure: {id:12, name:'Adventure'},
+             comedy: {id:35, name:'Comedy'},
+             'sci-fi': {id:878, name:'Sci-Fi'},
+             horror: {id:27, name:'Horror'},
+             fantasy: {id:14, name:'Fantasy'},
+             thriller: {id:53, name:'Thriller'}
+         };
+         function navigateTo(tab) {
+             const path = tab === 'home' ? '/' : `/${tab}`;
+             history.pushState({ tab }, '', path);
+             switchTab(tab);
+         }
+         function switchTab(tab) {
+             state.activeTab = tab;
+             if (!GENRE_ROUTES[tab]) { state.activeGenreId = ''; state.activeGenreName = ''; }
+             document.getElementById('detail-section').classList.add('hidden');
+             const sections = {
+                 hero: document.getElementById('hero-section'),
+                 search: document.getElementById('search-section'),
+                 genre: document.getElementById('genre-section'),
+                 trending: document.getElementById('trending-section'),
+                 movies: document.getElementById('movies-section'),
+                 series: document.getElementById('series-section'),
+                 thriller: document.getElementById('thriller-section'),
+                 koreaSeries: document.getElementById('korea-series-section'),
+                 indiaSeries: document.getElementById('india-series-section'),
+                 asiaMovies: document.getElementById('asia-movies-section'),
+                 indonesiaMovies: document.getElementById('indonesia-movies-section'),
+                 watchlist: document.getElementById('watchlist-section')
+             };
+             document.querySelectorAll('#main-content > *').forEach(s => s.classList.add('hidden'));
+             if (tab === 'search') {
+                 sections.search.classList.remove('hidden');
+             } else if (GENRE_ROUTES[tab]) {
+                 state.activeGenreId = String(GENRE_ROUTES[tab].id);
+                 state.activeGenreName = GENRE_ROUTES[tab].name;
+                 sections.genre.classList.remove('hidden');
+                 document.getElementById('genre-page-title').innerHTML = `<span class="text-brand-500">🎬</span> ${state.activeGenreName}`;
+                 fetchGenreData();
+             } else if (tab === 'watchlist') {
+                 sections.watchlist.classList.remove('hidden');
+                 renderWatchlistGrid();
+             } else {
+                 sections.hero.classList.remove('hidden');
+                 sections.trending.classList.remove('hidden');
+                 sections.movies.classList.remove('hidden');
+                 sections.series.classList.remove('hidden');
+                 sections.thriller.classList.remove('hidden');
+                 sections.koreaSeries.classList.remove('hidden');
+                 sections.indiaSeries.classList.remove('hidden');
+                 sections.asiaMovies.classList.remove('hidden');
+                 sections.indonesiaMovies.classList.remove('hidden');
+                 renderAllSections();
+             }
+             document.querySelectorAll('[id^="nav-"], [id^="mob-nav-"]').forEach(btn => {
+                 const tabName = btn.id.replace('nav-', '').replace('mob-nav-', '');
+                 if (tabName === tab) { btn.classList.add('text-brand-500'); btn.classList.remove('text-zinc-400','text-zinc-300'); }
+                 else { btn.classList.remove('text-brand-500'); btn.classList.add('text-zinc-400'); }
+             });
+             window.scrollTo({top:0, behavior:'smooth'});
+             setTimeout(updateTvFocusables, 200);
+         }
+         // ========== ROUTE HANDLER ==========
+         async function handleRoute() {
+             const path = window.location.pathname;
+             if (path === '/') { switchTab('home'); return; }
+             if (path === '/search') {
+                 const q = new URLSearchParams(window.location.search).get('q') || '';
+                 switchTab('search');
+                 const input=document.getElementById('search-input'); const mobile=document.getElementById('mobile-search-input');
+                 if(input) input.value=q; if(mobile) mobile.value=q; const pageInput=document.getElementById('search-page-input'); if(pageInput) pageInput.value=q;
+                 if(q) await executeSearch(q, false);
+                 return;
+             }
+             if (path === '/movies') { switchTab('movies'); return; }
+             if (path === '/tv') { switchTab('tv'); return; }
+             if (path === '/watchlist') { switchTab('watchlist'); return; }
+             if (GENRE_ROUTES[path.slice(1)]) { switchTab(path.slice(1)); return; }
+             const movieMatch = path.match(/^\/movie\/(\d+)(?:\/[^/]+)?$/);
+             if (movieMatch) { await openMediaById(movieMatch[1], 'movie'); return; }
+             const tvMatch = path.match(/^\/tv\/(\d+)(?:\/[^/]+)?$/);
+             if (tvMatch) { await openMediaById(tvMatch[1], 'tv'); return; }
+             switchTab('home');
+         }
+         async function openMediaById(id, type) {
+             const key = getMediaKey(type, id);
+             let item = mediaCache.get(key);
+             if (!item) {
+                 const res = await tmdbFetch(`/${type}/${id}?language=id-ID`);
+                 if (res?.ok) {
+                     const data = await res.json();
+                     item = normalizeTMDBItem(data);
+                 }
+             }
+             if (item) {
+                 const currentPath = window.location.pathname;
+                 const slug = slugify(item.title);
+                 const expectedPath = `/${type}/${id}/${slug}`;
+                 if (currentPath !== expectedPath) history.replaceState(null, '', expectedPath);
+                 openDetailPage(item);
+             } else {
+                 showToast('Konten tidak ditemukan', '⚠️');
+                 navigateTo('home');
+             }
+         }
+         function setupHeroCarousel() {
+             if (state.heroItems.length === 0) return;
+             updateHeroDisplay();
+             if (state.heroTimer) clearInterval(state.heroTimer);
+             state.heroTimer = setInterval(nextHero, 6000);
+         }
+         function updateHeroDisplay() {
+             const item = state.heroItems[state.currentHeroIndex];
+             if (!item) return;
+             const backdrop = document.getElementById('hero-backdrop');
+             if (backdrop) backdrop.style.backgroundImage = `url('${item.backdrop_path}')`;
+             document.getElementById('hero-title').textContent = item.title;
+             document.getElementById('hero-overview').textContent = item.overview;
+             document.getElementById('hero-rating').textContent = `★ ${item.rating}`;
+             document.getElementById('hero-year').textContent = item.year;
+             document.getElementById('hero-type').textContent = item.type === 'tv' ? 'TV Series' : 'Bioskop Movie';
+             const isFav = isWatchlisted(item.id);
+             document.getElementById('hero-fav-icon').textContent = isFav ? '⭐' : '☆';
+             document.getElementById('hero-fav-text').textContent = isFav ? 'Tersimpan' : 'Simpan';
+         }
+         function nextHero() {
+             if (state.heroItems.length === 0) return;
+             state.currentHeroIndex = (state.currentHeroIndex + 1) % state.heroItems.length;
+             updateHeroDisplay();
+         }
+         function prevHero() {
+             if (state.heroItems.length === 0) return;
+             state.currentHeroIndex = (state.currentHeroIndex - 1 + state.heroItems.length) % state.heroItems.length;
+             updateHeroDisplay();
+         }
+         window.addEventListener('popstate', handleRoute);
+         window.onload = function () {
+             updateWatchlistBadge();
+             setupHeroCarousel();
+             renderAllSections();
+             fetchTMDBCatalogs();
+             initSmartTvControls();
+             handleRoute();
+             setTimeout(updateTvFocusables, 500);
+         };
+     </script>
+     </body>
+ </html>

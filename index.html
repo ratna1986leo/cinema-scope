@@ -458,7 +458,7 @@
          window.addEventListener('unhandledrejection', (e) => { console.error('Unhandled promise rejection:', e.reason); });
          // Isi setelah deploy backend Render, contoh: https://cinema-scope-tmdb.onrender.com/api/tmdb
 // Untuk Blogger, gunakan URL lengkap Render sampai /api/tmdb.
-const TMDB_PROXY_BASE = '';
+const TMDB_PROXY_BASE = window.location.origin + '/api/tmdb';
 const DEFAULT_API_KEY = ""; // API key disimpan di backend Render, bukan di HTML publik.
          const FALLBACK_MOVIES = [
              { id: 939243, title: "Avatar: Fire and Ash", type: "movie", rating: "8.9", year: "2026", genre: "Sci-Fi, Adventure", overview: "Lanjutan epik petualangan di Pandora dengan visual memukau dan pertempuran klan baru.", poster_path: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" },
@@ -528,7 +528,7 @@ const DEFAULT_API_KEY = ""; // API key disimpan di backend Render, bukan di HTML
                      });
                  } catch (err) {
                      console.error('TMDB_PROXY_BASE bukan URL yang valid:', err);
-                     showToast('URL Cloudflare Worker belum benar.', '⚠️');
+                     showToast('URL API proxy belum benar.', '⚠️');
                      return { ok: false, status: 0 };
                  }
 
@@ -551,7 +551,7 @@ const DEFAULT_API_KEY = ""; // API key disimpan di backend Render, bukan di HTML
                          if ([401, 403].includes(res.status)) {
                              if (!state.tmdbWarningShown) {
                                  state.tmdbWarningShown = true;
-                                 showToast('Periksa BLOGGER_ORIGINS dan TMDB_API_KEY di Cloudflare.', '⚠️');
+                                 showToast('Periksa pengaturan API proxy dan TMDB_API_KEY di Render.', '⚠️');
                              }
                              return { ok: false, status: res.status };
                          }
@@ -572,7 +572,7 @@ const DEFAULT_API_KEY = ""; // API key disimpan di backend Render, bukan di HTML
                  console.error('Render proxy tidak bisa diakses:', lastError);
                  if (!state.tmdbWarningShown) {
                      state.tmdbWarningShown = true;
-                     showToast('Proxy tidak dapat diakses. Periksa URL Render dan CORS Blogger.', '⚠️');
+                     showToast('Proxy TMDB tidak dapat diakses. Periksa service dan TMDB_API_KEY di Render.', '⚠️');
                  }
                  return { ok: false, status: 0 };
              }

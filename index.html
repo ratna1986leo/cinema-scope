@@ -513,31 +513,29 @@
              const url = new URL(`https://api.themoviedb.org/3${endpoint}`);
              url.searchParams.set('api_key', DEFAULT_API_KEY);
 
-             // Mengikuti pola retry pada situs referensi: request dicoba ulang jika timeout/gagal jaringan.
+             // Samakan pola request dengan repo percobaan: timeout 10 detik, 2 percobaan,
+             // jeda eksponensial, tanpa opsi fetch tambahan yang tidak dipakai situs referensi.
              let lastError = null;
-             for (let attempt = 1; attempt <= 3; attempt++) {
+             for (let attempt = 1; attempt <= 2; attempt++) {
                  const controller = new AbortController();
                  const timeoutId = setTimeout(() => controller.abort(), 10000);
                  try {
-                     const res = await fetch(url.toString(), {
-                         headers: { 'Accept': 'application/json' },
-                         signal: controller.signal,
-                         cache: 'no-store'
-                     });
+                     const res = await fetch(url.toString(), { signal: controller.signal });
                      clearTimeout(timeoutId);
                      if (res.ok) return res;
 
                      const message = `TMDB HTTP ${res.status} pada ${endpoint}`;
                      console.error(message);
-                     // Error autentikasi/akses tidak akan membaik dengan retry.
-                     if ([401, 403].includes(res.status)) break;
+                     if ([401, 403].includes(res.status)) {
+                         return { ok: false, json: async () => ({ results: [] }) };
+                     }
                      lastError = new Error(message);
                  } catch (err) {
                      clearTimeout(timeoutId);
                      lastError = err;
-                     console.warn(`TMDB percobaan ${attempt}/3 gagal:`, endpoint, err?.name || err?.message || err);
+                     console.warn(`TMDB percobaan ${attempt}/2 gagal:`, endpoint, err?.name || err?.message || err);
                  }
-                 if (attempt < 3) await new Promise(resolve => setTimeout(resolve, 700 * attempt));
+                 if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt - 1)));
              }
 
              if (lastError) console.error('TMDB gagal setelah percobaan ulang:', endpoint, lastError);
@@ -590,12 +588,26 @@
              };
              try {
                  const entries = Object.entries(endpoints);
-                 const responses = await Promise.all(entries.map(async ([key, endpoint]) => {
-                     const res = await tmdbFetch(endpoint);
-                     if (!res?.ok) return [key, null];
-                     try { return [key, await res.json()]; }
-                     catch (err) { console.error('TMDB JSON parse failed:', endpoint, err); return [key, null]; }
-                 }));
+                 const responses = [];
+                 let nextIndex = 0;
+                 // Maksimal 4 request bersamaan, seperti beban katalog di repo referensi.
+                 const worker = async () => {
+                     while (nextIndex < entries.length) {
+                         const index = nextIndex++;
+                         const [key, endpoint] = entries[index];
+                         const res = await tmdbFetch(endpoint);
+                         if (!res?.ok) {
+                             responses[index] = [key, null];
+                             continue;
+                         }
+                         try { responses[index] = [key, await res.json()]; }
+                         catch (err) {
+                             console.error('TMDB JSON parse failed:', endpoint, err);
+                             responses[index] = [key, null];
+                         }
+                     }
+                 };
+                 await Promise.all(Array.from({ length: Math.min(4, entries.length) }, () => worker()));
                  const dataByKey = Object.fromEntries(responses);
                  let fetchedAny = false;
 

@@ -456,7 +456,10 @@
          // ============================================
          window.addEventListener('error', (e) => { console.error('Website error:', e.error || e.message); });
          window.addEventListener('unhandledrejection', (e) => { console.error('Unhandled promise rejection:', e.reason); });
-         const DEFAULT_API_KEY = "a45cdae790f09cee394b716b3115b84f";
+         // Isi setelah deploy Cloudflare Worker, contoh: https://cinema-scope-tmdb.USER.workers.dev
+// Untuk penggunaan Blogger, arahkan TMDB_PROXY_BASE ke URL Worker milikmu.
+const TMDB_PROXY_BASE = '';
+const DEFAULT_API_KEY = "a45cdae790f09cee394b716b3115b84f";
          const FALLBACK_MOVIES = [
              { id: 939243, title: "Avatar: Fire and Ash", type: "movie", rating: "8.9", year: "2026", genre: "Sci-Fi, Adventure", overview: "Lanjutan epik petualangan di Pandora dengan visual memukau dan pertempuran klan baru.", poster_path: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" },
              { id: 533535, title: "Deadpool & Wolverine", type: "movie", rating: "8.1", year: "2024", genre: "Action, Comedy", overview: "Duet kocak dan brutal antara Wade Wilson dan Logan menyelamatkan multiverse.", poster_path: "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg" },
@@ -512,15 +515,75 @@
          function slugify(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
          async function tmdbFetch(endpoint) {
              const tmdbUrl = new URL(`https://api.themoviedb.org/3${endpoint}`);
+
+             // Blogger/static hosting: gunakan Cloudflare Worker bila TMDB_PROXY_BASE sudah diisi.
+             // Saat Worker aktif, jangan fallback ke direct TMDB karena itu mengekspos API key browser.
+             if (String(TMDB_PROXY_BASE || '').trim()) {
+                 let workerUrl;
+                 try {
+                     workerUrl = new URL(TMDB_PROXY_BASE);
+                     workerUrl.searchParams.set('path', tmdbUrl.pathname);
+                     tmdbUrl.searchParams.forEach((value, key) => {
+                         if (key !== 'api_key') workerUrl.searchParams.set(key, value);
+                     });
+                 } catch (err) {
+                     console.error('TMDB_PROXY_BASE bukan URL yang valid:', err);
+                     showToast('URL Cloudflare Worker belum benar.', '⚠️');
+                     return { ok: false, status: 0 };
+                 }
+
+                 let lastError = null;
+                 for (let attempt = 1; attempt <= 2; attempt++) {
+                     const controller = new AbortController();
+                     const timeoutId = setTimeout(() => controller.abort(), 10000);
+                     try {
+                         const res = await fetch(workerUrl.toString(), {
+                             signal: controller.signal,
+                             cache: 'no-store'
+                         });
+                         clearTimeout(timeoutId);
+                         if (res.ok) return res;
+
+                         let detail = '';
+                         try { detail = await res.clone().text(); } catch (_) {}
+                         console.error(`Cloudflare TMDB Worker HTTP ${res.status}:`, endpoint, detail);
+
+                         if ([401, 403].includes(res.status)) {
+                             if (!state.tmdbWarningShown) {
+                                 state.tmdbWarningShown = true;
+                                 showToast('Periksa BLOGGER_ORIGINS dan TMDB_API_KEY di Cloudflare.', '⚠️');
+                             }
+                             return { ok: false, status: res.status };
+                         }
+                         if (res.status < 500 && res.status !== 429) {
+                             return { ok: false, status: res.status };
+                         }
+                         lastError = new Error(`Worker HTTP ${res.status}`);
+                     } catch (err) {
+                         clearTimeout(timeoutId);
+                         lastError = err;
+                         console.warn(`Cloudflare Worker percobaan ${attempt}/2 gagal:`, err?.name || err?.message || err);
+                     }
+                     if (attempt < 2) {
+                         await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                     }
+                 }
+
+                 console.error('Cloudflare Worker tidak bisa diakses:', lastError);
+                 if (!state.tmdbWarningShown) {
+                     state.tmdbWarningShown = true;
+                     showToast('Worker tidak dapat diakses. Periksa URL Worker dan CORS Blogger.', '⚠️');
+                 }
+                 return { ok: false, status: 0 };
+             }
+
+             // Mode lama untuk deployment Vercel same-origin / hosting lama.
              const proxyUrl = new URL('/api/tmdb', window.location.origin);
              proxyUrl.searchParams.set('path', tmdbUrl.pathname);
              tmdbUrl.searchParams.forEach((value, key) => {
                  if (key !== 'api_key') proxyUrl.searchParams.set(key, value);
              });
 
-             // Utamakan proxy same-origin seperti pada nonton-gratisan agar key disimpan di environment server.
-             // Jika halaman masih di-host statis (mis. GitHub Pages) dan endpoint proxy tidak tersedia,
-             // pertahankan fallback direct lama agar situs tidak langsung rusak selama migrasi hosting.
              async function directTMDBFallback() {
                  const directUrl = new URL(tmdbUrl.toString());
                  directUrl.searchParams.set('api_key', DEFAULT_API_KEY);
@@ -536,7 +599,7 @@
                          if ([401, 403].includes(res.status)) {
                              if (!state.tmdbWarningShown) {
                                  state.tmdbWarningShown = true;
-                                 showToast('API key TMDB ditolak. Deploy ke Vercel dan atur TMDB_API_KEY.', '⚠️');
+                                 showToast('API key TMDB ditolak. Periksa key TMDB.', '⚠️');
                              }
                              return { ok: false, status: res.status };
                          }
@@ -563,7 +626,6 @@
                      if (res.ok) return res;
 
                      const contentType = res.headers.get('content-type') || '';
-                     // 404 HTML biasanya berarti situs masih berada di static hosting, bukan Vercel Functions.
                      if (res.status === 404 && !contentType.toLowerCase().includes('application/json')) {
                          console.info('Endpoint /api/tmdb tidak tersedia; menggunakan fallback TMDB langsung.');
                          return await directTMDBFallback();
@@ -572,7 +634,7 @@
                      if ([401, 403].includes(res.status)) {
                          if (!state.tmdbWarningShown) {
                              state.tmdbWarningShown = true;
-                             showToast('TMDB menolak API key server. Periksa environment TMDB_API_KEY di Vercel.', '⚠️');
+                             showToast('TMDB menolak API key server. Periksa konfigurasi backend.', '⚠️');
                          }
                          console.error(`TMDB proxy HTTP ${res.status} pada ${endpoint}`);
                          return { ok: false, status: res.status };
@@ -581,7 +643,7 @@
                          try {
                              const body = await res.clone().json();
                              if (String(body?.error || '').includes('TMDB_API_KEY')) {
-                                 showToast('Atur TMDB_API_KEY di Environment Variables Vercel.', '⚠️');
+                                 showToast('Atur TMDB_API_KEY di environment backend.', '⚠️');
                                  console.error('TMDB proxy configuration:', body.error);
                                  return { ok: false, status: 500 };
                              }
@@ -602,7 +664,7 @@
              if (lastError) console.error('TMDB proxy gagal setelah percobaan ulang:', endpoint, lastError);
              if (!state.tmdbWarningShown) {
                  state.tmdbWarningShown = true;
-                 showToast('TMDB gagal dimuat. Periksa koneksi atau konfigurasi Vercel.', '⚠️');
+                 showToast('TMDB gagal dimuat. Periksa koneksi atau konfigurasi backend.', '⚠️');
              }
              return { ok: false, status: lastError?.status };
          }

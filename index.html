@@ -454,8 +454,8 @@
          // ============================================
          // GLOBAL ERROR HANDLERS
          // ============================================
-         window.addEventListener('error', (e) => { e.preventDefault(); return true; }, true);
-         window.addEventListener('unhandledrejection', (e) => { e.preventDefault(); });
+         window.addEventListener('error', (e) => { console.error('Website error:', e.error || e.message); });
+         window.addEventListener('unhandledrejection', (e) => { console.error('Unhandled promise rejection:', e.reason); });
          const DEFAULT_API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlOWE0MjVkOWE5NWIxOWNlZWNmNWY3NjM0OTFhMTZhMiIsIm5iZiI6MTc4NjcwODk3NS45NDMsInN1YiI6IjZhN2YwM2VmYWRhZTA1MzllZWI3YTUwMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tYWz-uha4q8nvwC1HTDd_KUgjGAdMFSPbOzZrkE3hoY";
          const FALLBACK_MOVIES = [
              { id: 939243, title: "Avatar: Fire and Ash", type: "movie", rating: "8.9", year: "2026", genre: "Sci-Fi, Adventure", overview: "Lanjutan epik petualangan di Pandora dengan visual memukau dan pertempuran klan baru.", poster_path: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", backdrop_path: "https://image.tmdb.org/t/p/w1280/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" },
@@ -474,6 +474,7 @@
          // ============================================
          // STATE & CACHE
          // ============================================
+         const TMDB_GENRES = {28:'Aksi',12:'Petualangan',16:'Animasi',35:'Komedi',80:'Kriminal',99:'Dokumenter',18:'Drama',10751:'Keluarga',14:'Fantasi',36:'Sejarah',27:'Horor',10402:'Musik',9648:'Misteri',10749:'Romansa',878:'Fiksi Ilmiah',10770:'Film TV',53:'Thriller',10752:'Perang',37:'Western',10759:'Aksi & Petualangan',10762:'Anak-anak',10763:'Berita',10764:'Reality',10765:'Sci-Fi & Fantasi',10766:'Sinetron',10767:'Talk Show',10768:'Perang & Politik'};
          const mediaCache = new Map();
          [...FALLBACK_MOVIES, ...FALLBACK_SERIES].forEach(item => mediaCache.set(`${item.type}-${item.id}`, item));
          const state = {
@@ -512,10 +513,17 @@
              try {
                  const url = `https://api.themoviedb.org/3${endpoint}`;
                  const headers = { 'Accept': 'application/json', 'Authorization': `Bearer ${DEFAULT_API_KEY}` };
-                 const res = await fetch(url, { headers });
-                 if (!res.ok) throw new Error('Network response failed');
-                 return res;
+                 const controller = new AbortController();
+                 const timeout = setTimeout(() => controller.abort(), 12000);
+                 try {
+                     const res = await fetch(url, { headers, signal: controller.signal, cache: 'no-store' });
+                     if (!res.ok) throw new Error(`TMDB HTTP ${res.status} (${endpoint})`);
+                     return res;
+                 } finally {
+                     clearTimeout(timeout);
+                 }
              } catch(err) {
+                 console.error('TMDB request failed:', endpoint, err);
                  return { ok: false, json: async () => ({ results: [] }) };
              }
          }
@@ -523,16 +531,16 @@
              try {
                  if (!item) return null;
                  const title = item.title || item.name || item.original_title || 'Tanpa Judul';
-                 const releaseDate = item.release_date || item.first_air_date || '2026';
-                 const year = releaseDate ? (releaseDate.split('-')[0] || '2026') : '2026';
+                 const releaseDate = item.release_date || item.first_air_date || '';
+                 const year = releaseDate ? releaseDate.split('-')[0] : '—';
                  const mediaType = item.media_type || (item.title ? 'movie' : 'tv');
                  const norm = {
                      id: item.id || Math.floor(Math.random() * 100000),
                      title,
                      type: mediaType,
-                     rating: item.vote_average ? item.vote_average.toFixed(1) : '8.0',
+                     rating: typeof item.vote_average === 'number' ? item.vote_average.toFixed(1) : '—',
                      year,
-                     genre: item.genre_ids ? item.genre_ids.join(', ') : 'Bioskop',
+                     genre: (item.genres || []).map(g => g.name).join(', ') || (item.genre_ids || []).map(id => TMDB_GENRES[id] || id).join(', ') || 'Tidak diketahui',
                      overview: item.overview || 'Tidak ada deskripsi tersedia.',
                      poster_path: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://placehold.co/400x600/18181b/ff5c00?text=No+Poster',
                      backdrop_path: item.backdrop_path ? `https://image.tmdb.org/t/p/w1280${item.backdrop_path}` : 'https://placehold.co/1200x600/18181b/ff5c00?text=No+Cover'
@@ -550,18 +558,19 @@
                  const yearVal = yearEl ? yearEl.value : '';
                  let endpointAppend = '';
                  if (genreId) endpointAppend += `&with_genres=${genreId}`;
-                 if (yearVal) endpointAppend += `&primary_release_year=${yearVal}&first_air_date_year=${yearVal}`;
+                 const movieYear = yearVal ? `&primary_release_year=${encodeURIComponent(yearVal)}` : '';
+                 const tvYear = yearVal ? `&first_air_date_year=${encodeURIComponent(yearVal)}` : '';
                  let fetchedAny = false;
-                 const resTrending = await tmdbFetch(`/trending/all/week?language=id-ID${endpointAppend}`);
+                 const resTrending = await tmdbFetch(`/trending/all/week?language=id-ID`);
                  if (resTrending?.ok) {
                      const data = await resTrending.json();
                      if (data?.results?.length) {
-                         state.trendingData = data.results.map(normalizeTMDBItem).filter(Boolean);
+                         state.trendingData = data.results.filter(x => (x.media_type === 'movie' || x.media_type === 'tv') && (!yearVal || (x.release_date || x.first_air_date || '').startsWith(yearVal))).map(normalizeTMDBItem).filter(Boolean);
                          state.heroItems = state.trendingData.slice(0, 5);
                          fetchedAny = true;
                      }
                  }
-                 const resMovies = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc${endpointAppend}`);
+                 const resMovies = await tmdbFetch(`/discover/movie?language=id-ID&sort_by=popularity.desc${endpointAppend}${movieYear}`);
                  if (resMovies?.ok) {
                      const data = await resMovies.json();
                      if (data?.results?.length) {
@@ -569,7 +578,7 @@
                          fetchedAny = true;
                      }
                  }
-                 const resTV = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc${endpointAppend}`);
+                 const resTV = await tmdbFetch(`/discover/tv?language=id-ID&sort_by=popularity.desc${endpointAppend}${tvYear}`);
                  if (resTV?.ok) {
                      const data = await resTV.json();
                      if (data?.results?.length) {
@@ -577,7 +586,7 @@
                          fetchedAny = true;
                      }
                  }
-                 const resThriller = await tmdbFetch(`/discover/movie?language=id-ID&with_genres=53&sort_by=popularity.desc${endpointAppend}`);
+                 const resThriller = await tmdbFetch(`/discover/movie?language=id-ID&with_genres=53&sort_by=popularity.desc${movieYear}`);
                  if (resThriller?.ok) {
                      const data = await resThriller.json();
                      if (data?.results?.length) {
@@ -616,6 +625,7 @@
                      if (data?.results?.length) state.indonesiaMoviesData = data.results.map(normalizeTMDBItem).filter(Boolean);
                  }
                  if (fetchedAny) setupHeroCarousel();
+                 else console.warn('Tidak ada katalog TMDB yang berhasil dimuat; menampilkan data cadangan.');
                  renderAllSections();
              } catch (err) {
                  renderAllSections();
@@ -1223,6 +1233,7 @@
              setupHeroCarousel();
              renderAllSections();
              fetchTMDBCatalogs();
+             setInterval(() => { if (!document.hidden && !state.activeGenreId) fetchTMDBCatalogs(); }, 15 * 60 * 1000);
              initSmartTvControls();
              handleRoute();
              setTimeout(updateTvFocusables, 500);
